@@ -35,7 +35,7 @@
           >
             重置
           </a-button>
-          <a-button type="primary" @click="handleSubmit">提交</a-button>
+          <a-button type="primary" @click="handleSubmit">登录</a-button>
         </div>
         <div class="icon-box">
           <i v-for="(item, index) in iconList" :key="index" :class="item"></i>
@@ -91,6 +91,9 @@ const handleSubmit = () => {
     message.success({
       content: '登录成功',
     });
+    setTimeout(() => {
+      router.push('/home');
+    }, 1000);
   }
 };
 </script>

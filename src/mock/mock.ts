@@ -54,4 +54,14 @@ export default [
       return userTableConfig;
     },
   },
+  {
+    url: '/mock/api/user/login',
+    method: 'post',
+    response() {
+      return {
+        code: 200,
+        msg: '登录成功',
+      };
+    },
+  },
 ] as MockMethod[];
