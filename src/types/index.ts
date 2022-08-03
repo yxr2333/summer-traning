@@ -51,3 +51,8 @@ export interface NavBarTagItem {
   isFocus: boolean;
   title: string;
 }
+
+export interface PageHeaderRadioItem {
+  value: string;
+  title: string;
+}

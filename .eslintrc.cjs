@@ -39,6 +39,7 @@ module.exports = defineConfig({
     semi: [0, 'always'],
     'no-unused-vars': 'off',
     'vue/multi-word-component-names': 'off',
-    'vue/require-default-prop': 'off'
+    'vue/require-default-prop': 'off',
+    'vue/attribute-hyphenation': 'off'
   },
 });

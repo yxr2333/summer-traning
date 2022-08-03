@@ -15,8 +15,9 @@
       <a-col :span="10" class="search-part">
         <a-input-search
           v-model:value="searchData"
+          size="large"
           class="search-part"
-          placeholder="input search text"
+          placeholder="输入数据进行搜索...."
           enter-button
           @search="onSearch"
         />
@@ -34,10 +35,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import WebBrand from '@/components/navbar/WebBrand.vue';
 import TopMenu from '@/components/navbar/TopMenu.vue';
+import WebBrand from '@/components/navbar/WebBrand.vue';
 import { UserOutlined } from '@ant-design/icons-vue';
+import { ref } from 'vue';
 
 const current = ref<string[]>(['mail']);
 const searchData = ref<string | null>(null);
@@ -49,7 +50,7 @@ const onSearch = () => {
 <style scoped lang="less">
 .header-wrapper {
   background-color: #fff;
-
+  box-shadow: 0 1px 4px 0 rgb(0 21 41 / 12%);
   .search-part {
     display: flex;
     align-items: center;
