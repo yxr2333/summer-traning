@@ -2,9 +2,11 @@
   <HeaderNavBar class="my-navbar" />
   <a-row class="home-content">
     <a-col :span="17" class="content-left">
+      <!--Tab栏部分-->
       <a-row>
         <label-list class="content-left-label-list" />
       </a-row>
+      <!--标题加选择器部分-->
       <a-row>
         <my-web-page-header
           :header-title="title"
@@ -14,8 +16,9 @@
         />
       </a-row>
       <div style="margin-bottom: 18px"></div>
+      <!--内容卡片区-->
       <a-row
-        v-for="i in 3"
+        v-for="i in 5"
         :key="i"
         style="margin-bottom: 18px; margin-left: -8px; margin-right: -8px"
       >
@@ -49,9 +52,21 @@
         </a-col>
       </a-row>
     </a-col>
+    <!--右边部分-->
     <a-col :span="6" class="content-right">
-      <a-row v-for="i in 2" :key="i" style="margin-bottom: 18px">
-        <a-card hoverable style="width: 300px">
+      <a-row style="margin-bottom: 18px">
+        <a-card hoverable>
+          <a-card-meta>
+            <template #title>✨ 欢迎加入我们的知识星球</template>
+            <template #description>
+              一个氛围超好的编程学习圈子，领资料、免费答疑、求职指南、简历修改、独家经验、专属直播(点击了解详情)
+            </template>
+          </a-card-meta>
+        </a-card>
+      </a-row>
+      <!--站点描述-->
+      <a-row style="margin-bottom: 18px">
+        <a-card hoverable style="width: 100%">
           <template #cover>
             <img
               alt="example"
@@ -70,21 +85,52 @@
           </a-card-meta>
         </a-card>
       </a-row>
+      <!--排行卡片-->
+      <a-row style="margin-bottom: 18px">
+        <a-card hoverable style="width: 100%">
+          <template #title>本周排行</template>
+          <template #extra>
+            <a>更多</a>
+          </template>
+          <a-card-meta>
+            <template #description>
+              <a-empty />
+            </template>
+          </a-card-meta>
+        </a-card>
+      </a-row>
+      <!--外部链接-->
+      <a-row style="margin-bottom: 18px">
+        <a-card hoverable style="width: 100%">
+          <a-card-meta>
+            <template #avatar>
+              <a-image
+                style="width: 64px"
+                src="https://s2.loli.net/2022/08/03/Rz5wd2IrVKk36po.jpg"
+              />
+            </template>
+            <template #title>三峡大学</template>
+            <template #description>
+              计算机与信息学院。学院下设计算机软件系、计算机工程系、计算机应用系、通信工程系、信息管理系、计算机与信息技术实验中心6个教学机构。
+            </template>
+          </a-card-meta>
+        </a-card>
+      </a-row>
     </a-col>
   </a-row>
 </template>
 
 <script lang="ts" setup>
-import HeaderNavBar from '@/components/navbar/HeaderNavBar.vue';
 import LabelList from '@/components/labelList.vue';
+import MyWebPageHeader from '@/components/myWebPageHeader.vue';
+import HeaderNavBar from '@/components/navbar/HeaderNavBar.vue';
+import { PageHeaderRadioItem } from '@/types';
 import {
-  SettingOutlined,
   EditOutlined,
   EllipsisOutlined,
+  SettingOutlined,
 } from '@ant-design/icons-vue';
 import { reactive, ref } from 'vue';
-import MyWebPageHeader from '@/components/myWebPageHeader.vue';
-import { PageHeaderRadioItem } from '@/types';
 const radioVal = ref<number | string>('a');
 const title = ref('你好');
 const radioData = reactive<PageHeaderRadioItem[]>([

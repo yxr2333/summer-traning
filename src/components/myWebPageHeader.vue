@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
 import { PageHeaderRadioItem } from '@/types';
+import { PropType } from 'vue';
 
 defineProps({
   headerTitle: {
