@@ -9,14 +9,14 @@
       <a-col :span="3" class="brand-part">
         <web-brand class="brand-part" />
       </a-col>
-      <a-col :span="5">
+      <a-col :span="6">
         <top-menu
           :menu-current="current"
           class="menu-part"
           @menu-select="handleMenuSelect"
         />
       </a-col>
-      <a-col :span="10" class="search-part">
+      <a-col :span="9" class="search-part">
         <a-input-search
           v-model:value="searchData"
           size="large"
@@ -43,11 +43,16 @@ import TopMenu from '@/components/navbar/TopMenu.vue';
 import WebBrand from '@/components/navbar/WebBrand.vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { useMenuStore } from '@/store';
 
+const menuStore = useMenuStore();
+menuStore.$subscribe((mutation, state) => {
+  current.value.splice(0);
+  current.value.push(state.nowMenu);
+});
 const router = useRouter();
-const route = useRoute();
-const current = ref<string[]>(['index']);
+const current = ref<string[]>([menuStore.nowMenu]);
 const searchData = ref<string | null>(null);
 const onSearch = () => {
   console.log(searchData.value);
@@ -55,7 +60,6 @@ const onSearch = () => {
 const handleMenuSelect = (key: string) => {
   current.value.splice(0);
   current.value.push(key);
-  console.log('current', current);
   router.push({ name: current.value.at(0) });
 };
 </script>
@@ -73,9 +77,7 @@ const handleMenuSelect = (key: string) => {
     cursor: pointer;
   }
   .menu-part {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    width: 100%;
   }
   .own-part {
     display: flex;

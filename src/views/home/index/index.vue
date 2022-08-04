@@ -3,7 +3,11 @@
     <a-col :span="17" class="content-left">
       <!--Tab栏部分-->
       <a-row>
-        <label-list class="content-left-label-list" />
+        <label-list
+          class="content-left-label-list"
+          :select-key="selectLabel"
+          @tab-change="handleTabChange"
+        />
       </a-row>
       <!--标题加选择器部分-->
       <a-row>
@@ -100,6 +104,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { AxiosResponse } from 'axios';
 import CardList from '@/components/cardList.vue';
 
+const selectLabel = ref('1');
 const radioVal = ref<number | string>('a');
 const title = ref('你好');
 const radioData = reactive<PageHeaderRadioItem[]>([
@@ -119,6 +124,9 @@ const radioData = reactive<PageHeaderRadioItem[]>([
 const cardData = ref<HomePageCardItem[][]>([]);
 const handleRadioChange = (val: string | number) => {
   radioVal.value = val;
+};
+const handleTabChange = (activeKey: string) => {
+  selectLabel.value = activeKey;
 };
 onMounted(() => {
   getPageCardData().then((resp: AxiosResponse<HomePageCardItem[]>) => {

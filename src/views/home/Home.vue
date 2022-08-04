@@ -36,7 +36,7 @@ onMounted(() => {
 <style scoped lang="less">
 .my-navbar {
   position: sticky;
-  top: 0px;
+  top: 0;
   height: 80px;
   z-index: 9999;
 }

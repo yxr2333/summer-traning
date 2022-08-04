@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-menu
-      v-model:selected-keys="$props.menuCurrent"
+      v-model:selected-keys="nowSelect"
       class="top-menu"
       mode="horizontal"
       @click="handleMenuClick"
@@ -29,14 +29,17 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { PropType, ref } from 'vue';
+import { useMenuStore } from '@/store/index';
+
 import {
   AppstoreOutlined,
   HomeOutlined,
   TabletOutlined,
 } from '@ant-design/icons-vue';
 
-defineProps({
+const menuStore = useMenuStore();
+const props = defineProps({
   menuCurrent: {
     type: Array as PropType<string[]>,
     required: true,
@@ -45,7 +48,11 @@ defineProps({
 const emit = defineEmits(['menu-select']);
 const handleMenuClick = (data: any) => {
   emit('menu-select', data.key);
+  nowSelect.value.splice(0);
+  nowSelect.value.push(data);
+  menuStore.nowMenu = data.key;
 };
+const nowSelect = ref(props.menuCurrent);
 </script>
 
 <style scoped></style>
