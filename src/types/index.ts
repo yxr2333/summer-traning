@@ -56,3 +56,14 @@ export interface PageHeaderRadioItem {
   value: string;
   title: string;
 }
+export interface CardTagItem {
+  isFlashed: boolean | null;
+  title: string;
+}
+export interface HomePageCardItem {
+  id: number | null;
+  iconUrl: string | null;
+  title: string | null;
+  desc: string | null;
+  // tags: CardTagItem[] | null;
+}

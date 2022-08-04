@@ -1,7 +1,7 @@
 <template>
   <a-row type="flex" justify="space-around" align="middle">
     <a-col :span="22">
-      <a-tabs v-model:activeKey="activeKey" type="card">
+      <a-tabs :activeKey="activeKey" type="card">
         <a-tab-pane
           v-for="item in 20"
           :key="item"
@@ -18,6 +18,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-const activeKey = ref('1');
+const activeKey = ref(1);
 </script>
 <style scoped></style>

@@ -3,6 +3,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import { viteMockServe } from 'vite-plugin-mock';
+import * as path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
@@ -20,5 +21,16 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
     extensions: ['.js', '.json', '.ts'],
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        modifyVars: {
+          hack: `true; @import (reference) "${path.resolve(
+            'src/style/index.less',
+          )}";`,
+        },
+      },
+    },
   },
 });

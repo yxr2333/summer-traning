@@ -4,8 +4,9 @@
       v-model:selected-keys="$props.menuCurrent"
       class="top-menu"
       mode="horizontal"
+      @click="handleMenuClick"
     >
-      <a-menu-item key="mail" title="主页">
+      <a-menu-item key="index" title="主页">
         <template #icon>
           <home-outlined />
         </template>
@@ -34,12 +35,17 @@ import {
   HomeOutlined,
   TabletOutlined,
 } from '@ant-design/icons-vue';
+
 defineProps({
   menuCurrent: {
     type: Array as PropType<string[]>,
     required: true,
   },
 });
+const emit = defineEmits(['menu-select']);
+const handleMenuClick = (data: any) => {
+  emit('menu-select', data.key);
+};
 </script>
 
 <style scoped></style>

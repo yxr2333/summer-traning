@@ -41,5 +41,6 @@ module.exports = defineConfig({
     'vue/multi-word-component-names': 'off',
     'vue/require-default-prop': 'off',
     'vue/attribute-hyphenation': 'off',
+    "prefer-const": 'off'
   },
 });

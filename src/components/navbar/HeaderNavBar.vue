@@ -10,7 +10,11 @@
         <web-brand class="brand-part" />
       </a-col>
       <a-col :span="5">
-        <top-menu :menu-current="current" class="menu-part" />
+        <top-menu
+          :menu-current="current"
+          class="menu-part"
+          @menu-select="handleMenuSelect"
+        />
       </a-col>
       <a-col :span="10" class="search-part">
         <a-input-search
@@ -26,7 +30,7 @@
         <a-button type="primary">推荐</a-button>
       </a-col>
       <a-col :span="2" class="own-part" style="justify-content: center">
-        <a-avatar :size="40">
+        <a-avatar :size="40" style="cursor: pointer">
           <template #icon><UserOutlined /></template>
         </a-avatar>
       </a-col>
@@ -39,11 +43,20 @@ import TopMenu from '@/components/navbar/TopMenu.vue';
 import WebBrand from '@/components/navbar/WebBrand.vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-const current = ref<string[]>(['mail']);
+const router = useRouter();
+const route = useRoute();
+const current = ref<string[]>(['index']);
 const searchData = ref<string | null>(null);
 const onSearch = () => {
   console.log(searchData.value);
+};
+const handleMenuSelect = (key: string) => {
+  current.value.splice(0);
+  current.value.push(key);
+  console.log('current', current);
+  router.push({ name: current.value.at(0) });
 };
 </script>
 
@@ -55,6 +68,9 @@ const onSearch = () => {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .brand-part {
+    cursor: pointer;
   }
   .menu-part {
     display: flex;
