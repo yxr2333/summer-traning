@@ -73,3 +73,9 @@ export interface WorldPageHeaderItem {
   content: string;
   extra: string;
 }
+
+export interface LeftMenuItem {
+  icon: string;
+  title: string;
+  key: string;
+}

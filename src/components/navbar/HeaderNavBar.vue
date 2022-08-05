@@ -41,19 +41,19 @@
 <script lang="ts" setup>
 import TopMenu from '@/components/navbar/TopMenu.vue';
 import WebBrand from '@/components/navbar/WebBrand.vue';
+import { useMenuStore } from '@/store';
 import { UserOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useMenuStore } from '@/store';
 
 const menuStore = useMenuStore();
-menuStore.$subscribe((mutation, state) => {
-  console.log('$subscribe');
-  current.value.pop();
-  current.value.push(state.nowMenu);
-  console.log('current', current.value);
-  // router.push({ name: current.value.at(0) });
-});
+// menuStore.$subscribe((mutation, state) => {
+//   console.log('$subscribe');
+//   current.value.pop();
+//   current.value.push(state.nowMenu);
+//   console.log('current', current.value);
+//   // router.push({ name: current.value.at(0) });
+// });
 const router = useRouter();
 const current = ref<string[]>([menuStore.nowMenu]); // 从pina中读取当前选中的菜单
 

@@ -8,10 +8,12 @@ const routes: RouteRecordRaw[] = [
     redirect: '/login',
   },
   {
+    name: 'login',
     path: '/login',
     component: () => import('@/views/login/Login.vue'),
   },
   {
+    name: 'home',
     path: '/home',
     component: () => import('@/views/home/Home.vue'),
     children: [
@@ -20,7 +22,7 @@ const routes: RouteRecordRaw[] = [
         redirect: 'home/index',
       },
       {
-        name: 'index',
+        name: 'homeIndex',
         path: 'index',
         component: () => import('@/views/home/index/index.vue'),
       },
@@ -74,7 +76,16 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        name: '404',
+        path: '404',
+        component: () => import('@/views/sys/404.vue'),
+      },
     ],
+  },
+  {
+    path: '/:pathMatch(.*)',
+    redirect: '/home/404',
   },
 ];
 const router = createRouter({

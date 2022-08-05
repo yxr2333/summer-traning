@@ -5,44 +5,30 @@
     mode="inline"
     @select="handleMenuSelect"
   >
-    <a-menu-item key="wish">
+    <a-menu-item v-for="item in menuData" :key="item.key">
       <template #icon>
-        <heart-outlined />
+        <Icon :icon="item.icon" />
       </template>
-      个人
-    </a-menu-item>
-    <a-menu-item key="find">
-      <template #icon>
-        <search-outlined />
-      </template>
-      找伙伴
-    </a-menu-item>
-    <a-menu-item key="discuss">
-      <template #icon>
-        <message-outlined />
-      </template>
-      讨论角
-    </a-menu-item>
-    <a-menu-item key="ranking">
-      <template #icon>
-        <menu-outlined />
-      </template>
-      激励榜
+      {{ item.title }}
     </a-menu-item>
   </a-menu>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import {
-  HeartOutlined,
-  MessageOutlined,
-  SearchOutlined,
-  MenuOutlined,
-} from '@ant-design/icons-vue';
+import { LeftMenuItem } from '@/types';
+import { Icon } from '@/utils/icon';
+import { PropType, ref } from 'vue';
 import { useRouter } from 'vue-router';
+const props = defineProps({
+  menuItems: {
+    type: Array as PropType<LeftMenuItem[]>,
+    required: true,
+  },
+});
 const router = useRouter();
+// TODO: 将菜单选中项使用Pinia管理，解决返回的时候选项不一致的问题
 const selectedKeys = ref(['wish']);
+const menuData = ref<LeftMenuItem[]>(props.menuItems);
 const handleMenuSelect = (param: any) => {
   const { key } = param;
   router.push({ name: key });

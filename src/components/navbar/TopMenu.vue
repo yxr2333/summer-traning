@@ -6,7 +6,7 @@
       mode="horizontal"
       @click="handleMenuClick"
     >
-      <a-menu-item key="index" title="主页">
+      <a-menu-item key="homeIndex" title="主页">
         <template #icon>
           <home-outlined />
         </template>
@@ -38,6 +38,10 @@ import {
   TabletOutlined,
 } from '@ant-design/icons-vue';
 const menuStore = useMenuStore();
+menuStore.$subscribe((mutation, state) => {
+  nowSelect.value.pop();
+  nowSelect.value.push(state.nowMenu);
+});
 const props = defineProps({
   menuCurrent: {
     type: Array as PropType<string[]>,
