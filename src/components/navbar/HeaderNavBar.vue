@@ -48,19 +48,23 @@ import { useMenuStore } from '@/store';
 
 const menuStore = useMenuStore();
 menuStore.$subscribe((mutation, state) => {
-  current.value.splice(0);
+  console.log('$subscribe');
+  current.value.pop();
   current.value.push(state.nowMenu);
+  console.log('current', current.value);
+  // router.push({ name: current.value.at(0) });
 });
 const router = useRouter();
-const current = ref<string[]>([menuStore.nowMenu]);
+const current = ref<string[]>([menuStore.nowMenu]); // 从pina中读取当前选中的菜单
+
 const searchData = ref<string | null>(null);
 const onSearch = () => {
   console.log(searchData.value);
 };
 const handleMenuSelect = (key: string) => {
-  current.value.splice(0);
-  current.value.push(key);
-  router.push({ name: current.value.at(0) });
+  // current.value.pop();
+  // current.value.push(key);
+  router.push({ name: key });
 };
 </script>
 

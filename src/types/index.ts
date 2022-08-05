@@ -67,3 +67,9 @@ export interface HomePageCardItem {
   desc: string | null;
   // tags: CardTagItem[] | null;
 }
+
+export interface WorldPageHeaderItem {
+  title: string;
+  content: string;
+  extra: string;
+}

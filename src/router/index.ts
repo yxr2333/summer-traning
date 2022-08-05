@@ -33,6 +33,46 @@ const routes: RouteRecordRaw[] = [
         name: 'world',
         path: 'world',
         component: () => import('@/views/home/world/world.vue'),
+        children: [
+          {
+            name: 'worldIndex',
+            path: '',
+            redirect: 'home/world/wish',
+          },
+          {
+            name: 'wish',
+            path: 'wish',
+            component: () => import('@/views/home/world/wish/wish.vue'),
+            meta: {
+              menu: 'world',
+            },
+          },
+          {
+            name: 'find',
+            path: 'find',
+            component: () => import('@/views/home/world/find/findFriends.vue'),
+            meta: {
+              menu: 'world',
+            },
+          },
+          {
+            name: 'ranking',
+            path: 'ranking',
+            component: () =>
+              import('@/views/home/world/ranking/rankingList.vue'),
+            meta: {
+              menu: 'world',
+            },
+          },
+          {
+            name: 'discuss',
+            path: 'discuss',
+            component: () => import('@/views/home/world/discuss/discuss.vue'),
+            meta: {
+              menu: 'world',
+            },
+          },
+        ],
       },
     ],
   },
@@ -44,6 +84,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   console.log(to);
   if (to.path.startsWith('/home')) {
+    if (to.path.startsWith('/home/world')) {
+      menuStore.nowMenu = to.meta.menu as string;
+      next();
+      return;
+    }
     const { name } = to;
     if (typeof name === 'string') {
       menuStore.nowMenu = name;

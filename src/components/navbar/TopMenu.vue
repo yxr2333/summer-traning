@@ -30,14 +30,13 @@
 
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
-import { useMenuStore } from '@/store/index';
+import { useMenuStore } from '@/store';
 
 import {
   AppstoreOutlined,
   HomeOutlined,
   TabletOutlined,
 } from '@ant-design/icons-vue';
-
 const menuStore = useMenuStore();
 const props = defineProps({
   menuCurrent: {
@@ -45,14 +44,18 @@ const props = defineProps({
     required: true,
   },
 });
+const nowSelect = ref(props.menuCurrent);
+
 const emit = defineEmits(['menu-select']);
 const handleMenuClick = (data: any) => {
+  console.log('success');
   emit('menu-select', data.key);
-  nowSelect.value.splice(0);
+  nowSelect.value.pop();
   nowSelect.value.push(data);
-  menuStore.nowMenu = data.key;
+  // todo: 在返回的时候，菜单的选中值似乎丢失了响应性
+  // 点击顶部菜单栏后,修改pinia中菜单的值
+  // menuStore.nowMenu = data.key;
 };
-const nowSelect = ref(props.menuCurrent);
 </script>
 
 <style scoped></style>
