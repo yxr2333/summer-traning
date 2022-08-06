@@ -1,5 +1,6 @@
 <template>
   <a-layout>
+    <!--左边菜单栏-->
     <a-layout-sider
       class="left-sider"
       collapsible
@@ -10,7 +11,12 @@
     </a-layout-sider>
     <a-layout ref="worldContent" class="content">
       <a-layout-content>
-        <router-view />
+        <!--主体内容部分-->
+        <router-view v-slot="{ Component }">
+          <!--          <keep-alive>-->
+          <component :is="Component" />
+          <!--          </keep-alive>-->
+        </router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -19,19 +25,29 @@
 <script setup lang="ts">
 import LeftMenu from '@/components/leftMenu.vue';
 
-import { onMounted, ref } from 'vue';
+import { onActivated, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { LeftMenuItem } from '@/types';
 const worldContent = ref();
 const router = useRouter();
+/**
+ * 控制菜单栏收缩时,主体内容部分的marginLeft
+ * @param collapsed
+ * @param type
+ */
 const handleCollapse = (collapsed: any, type: any) => {
   // console.log(worldContent.value);
   console.log(collapsed);
   worldContent.value.$el.style.marginLeft = collapsed ? '80px' : '200px';
 };
+/**
+ * 调用时机为首次挂载
+ * 以及每次从缓存中被重新插入的时候
+ */
 onMounted(() => {
   router.replace({ name: 'wish' });
 });
+
 const menuItems = ref<LeftMenuItem[]>([
   {
     icon: 'HeartOutlined',

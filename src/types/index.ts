@@ -71,7 +71,8 @@ export interface HomePageCardItem {
 export interface WorldPageHeaderItem {
   title: string;
   content: string;
-  extra: string;
+  extra: string | null;
+  icon: string | null;
 }
 
 export interface LeftMenuItem {

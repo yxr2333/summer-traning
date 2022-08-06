@@ -123,7 +123,7 @@ import {
 import { HomePageCardItem } from '@/types';
 import getPageCardData from '@/api/common';
 import { AxiosResponse } from 'axios';
-import CommonPageHeader from '@/components/commonPageHeader.vue';
+import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
 
 const radioVal = ref('a');
 const checked = ref(false);

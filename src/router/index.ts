@@ -11,6 +11,9 @@ const routes: RouteRecordRaw[] = [
     name: 'login',
     path: '/login',
     component: () => import('@/views/login/Login.vue'),
+    meta: {
+      title: '登录',
+    },
   },
   {
     name: 'home',
@@ -18,6 +21,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/home/Home.vue'),
     children: [
       {
+        name: 'homeNone',
         path: '',
         redirect: 'home/index',
       },
@@ -25,11 +29,17 @@ const routes: RouteRecordRaw[] = [
         name: 'homeIndex',
         path: 'index',
         component: () => import('@/views/home/index/index.vue'),
+        meta: {
+          title: '主页',
+        },
       },
       {
         name: 'resource',
         path: 'resource',
         component: () => import('@/views/home/resource/resource.vue'),
+        meta: {
+          title: '资源',
+        },
       },
       {
         name: 'world',
@@ -47,6 +57,7 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/views/home/world/wish/wish.vue'),
             meta: {
               menu: 'world',
+              title: '心愿墙',
             },
           },
           {
@@ -55,6 +66,7 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/views/home/world/find/findFriends.vue'),
             meta: {
               menu: 'world',
+              title: '找伙伴',
             },
           },
           {
@@ -64,6 +76,7 @@ const routes: RouteRecordRaw[] = [
               import('@/views/home/world/ranking/rankingList.vue'),
             meta: {
               menu: 'world',
+              title: '激励榜',
             },
           },
           {
@@ -72,6 +85,7 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/views/home/world/discuss/discuss.vue'),
             meta: {
               menu: 'world',
+              title: '讨论角',
             },
           },
         ],
@@ -80,6 +94,9 @@ const routes: RouteRecordRaw[] = [
         name: '404',
         path: '404',
         component: () => import('@/views/sys/404.vue'),
+        meta: {
+          title: '走丢了~',
+        },
       },
     ],
   },
@@ -94,6 +111,9 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   console.log(to);
+  if (to.meta.title) {
+    document.title = to.meta.title + ' - 知识星球';
+  }
   if (to.path.startsWith('/home')) {
     if (to.path.startsWith('/home/world')) {
       menuStore.nowMenu = to.meta.menu as string;

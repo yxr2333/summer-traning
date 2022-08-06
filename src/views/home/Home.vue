@@ -3,7 +3,11 @@
     <a-back-top :visibility-height="0" class="to-top" />
   </div>
   <HeaderNavBar class="my-navbar" />
-  <router-view />
+  <router-view v-slot="{ Component }">
+    <!--    <keep-alive>-->
+    <component :is="Component" />
+    <!--    </keep-alive>-->
+  </router-view>
 </template>
 
 <script lang="ts" setup>
