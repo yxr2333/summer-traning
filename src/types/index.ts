@@ -1,3 +1,5 @@
+import { Dayjs } from 'dayjs';
+
 export interface Log {
   id: number | undefined | null;
   msg: string | undefined | null;
@@ -79,4 +81,11 @@ export interface LeftMenuItem {
   icon: string;
   title: string;
   key: string;
+}
+
+export interface CommentItem {
+  author: string;
+  avatar: string;
+  content: string;
+  datetime: Dayjs;
 }

@@ -21,14 +21,15 @@
 
 <script lang="ts" setup>
 import { Icon } from '@/utils/icon';
+import { PropType } from 'vue';
 defineProps({
   title: {
     type: String,
     required: true,
   },
   extraText: {
-    type: String,
-    required: true,
+    type: String as PropType<string | null>,
+    required: false,
   },
   content: {
     required: true,
@@ -36,7 +37,7 @@ defineProps({
   },
   icon: {
     required: false,
-    type: String,
+    type: String as PropType<string | null>,
   },
 });
 </script>

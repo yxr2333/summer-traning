@@ -94,7 +94,7 @@
 import LabelList from '@/components/labelList.vue';
 import MyWebPageHeader from '@/components/myWebPageHeader.vue';
 import { HomePageCardItem, PageHeaderRadioItem } from '@/types';
-import getPageCardData from '@/api/common';
+import { getPageCardData } from '@/api/common';
 import {
   EditOutlined,
   EllipsisOutlined,

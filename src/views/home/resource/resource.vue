@@ -121,7 +121,7 @@ import {
   SettingOutlined,
 } from '@ant-design/icons-vue';
 import { HomePageCardItem } from '@/types';
-import getPageCardData from '@/api/common';
+import { getPageCardData } from '@/api/common';
 import { AxiosResponse } from 'axios';
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
 

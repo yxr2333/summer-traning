@@ -1,4 +1,9 @@
-import { HomePageCardItem, TableConfig, TableDataItem } from '@/types';
+import {
+  CommentItem,
+  HomePageCardItem,
+  TableConfig,
+  TableDataItem,
+} from '@/types';
 import { MockMethod } from 'vite-plugin-mock';
 
 const userData: TableDataItem[] = [

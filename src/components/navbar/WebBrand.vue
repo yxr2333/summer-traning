@@ -1,11 +1,18 @@
 <template>
-  <div class="web-brand">
+  <div class="web-brand" @click="handleToHome">
     <img alt="logo" src="src/assets/vue.svg" />
     <span>知识星球</span>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const handleToHome = () => {
+  router.push({ name: 'homeIndex' });
+};
+</script>
 
 <style scoped>
 .web-brand {

@@ -9,7 +9,7 @@ import { ref } from 'vue';
 import { WorldPageHeaderItem } from '@/types';
 import WorldContent from '@/components/worldContent/worldContent.vue';
 const header = ref<WorldPageHeaderItem>({
-  title: '找伙伴',
+  title: '🔍︎找伙伴',
   content: '海内存知己,天涯若比邻',
   extra: '填写自我介绍',
   icon: 'EditOutlined',

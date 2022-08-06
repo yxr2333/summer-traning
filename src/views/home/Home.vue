@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import HeaderNavBar from '@/components/navbar/HeaderNavBar.vue';
 import { HomePageCardItem } from '@/types';
-import getPageCardData from '@/api/common';
+import { getPageCardData } from '@/api/common';
 import { onMounted, ref } from 'vue';
 import { AxiosResponse } from 'axios';
 
