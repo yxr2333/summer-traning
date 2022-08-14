@@ -1,22 +1,36 @@
 <template>
   <div class="header-wrapper">
     <a-row
-      style="height: inherit"
+      style="height: 80px"
       type="flex"
       justify="space-around"
       align="middle"
     >
-      <a-col :span="3" class="brand-part">
+      <a-col :xl="5" :lg="5" :md="5" :sm="8" :xs="8" class="brand-part">
         <web-brand class="brand-part" />
+        <span ref="brandText">知识星球</span>
+        <span ref="menuIcon" @click="handleDrawerClick">
+          <Icon :icon="menuIconText" style="font-size: 20px" />
+          <!--          <menu-unfold-outlined :style="{ fontSize: '20px' }" />-->
+        </span>
       </a-col>
-      <a-col :span="6">
+
+      <a-col ref="menuRef" :xl="7" :lg="7" :md="7">
         <top-menu
           :menu-current="current"
           class="menu-part"
           @menu-select="handleMenuSelect"
         />
       </a-col>
-      <a-col :span="9" class="search-part">
+      <a-col
+        ref="inputRef"
+        :xl="8"
+        :lg="8"
+        :md="8"
+        :sm="8"
+        :xs="8"
+        class="search-part"
+      >
         <a-input-search
           v-model:value="searchData"
           size="large"
@@ -26,16 +40,63 @@
           @search="onSearch"
         />
       </a-col>
-      <a-col :span="2" class="own-part">
-        <a-button type="primary">推荐</a-button>
+      <a-col
+        ref="btnRef"
+        :xl="2"
+        :lg="2"
+        :md="2"
+        :sm="4"
+        :xs="4"
+        class="own-part"
+      >
+        <a-row align="middle" justify="center">
+          <a-button type="primary">推荐</a-button>
+        </a-row>
       </a-col>
-      <a-col :span="2" class="own-part" style="justify-content: center">
-        <a-avatar :size="40" style="cursor: pointer">
-          <template #icon><UserOutlined /></template>
-        </a-avatar>
+      <a-col
+        :xl="2"
+        :lg="2"
+        :md="2"
+        :sm="3"
+        :xs="3"
+        class="own-part"
+        style="justify-content: center"
+      >
+        <a-dropdown placement="bottom">
+          <a-avatar :size="40" style="cursor: pointer">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <a href="javascript:;">个人中心</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a href="javascript:;">消息中心</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a href="javascript:;" style="color: red">退出登录</a>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </a-col>
     </a-row>
   </div>
+  <a-drawer
+    v-model:visible="drawerVisible"
+    placement="left"
+    width="150"
+    z-index="2000"
+    style="padding: 40px 24px"
+  >
+    <top-menu
+      menu-mode="vertical"
+      :menu-current="current"
+      class="menu-part"
+      @menu-select="handleMenuSelect"
+    />
+  </a-drawer>
 </template>
 
 <script lang="ts" setup>
@@ -43,9 +104,52 @@ import TopMenu from '@/components/navbar/TopMenu.vue';
 import WebBrand from '@/components/navbar/WebBrand.vue';
 import { useMenuStore } from '@/store';
 import { UserOutlined } from '@ant-design/icons-vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { Icon } from '@/utils/icon';
 
+const brandText = ref();
+const menuIcon = ref();
+const btnRef = ref();
+const menuRef = ref();
+const inputRef = ref();
+const drawerVisible = ref(false);
+const menuIconText = ref('MenuUnfoldOutlined');
+
+const handleDrawerClick = () => {
+  drawerVisible.value = !drawerVisible.value;
+  if (drawerVisible.value === true) {
+    menuIconText.value = 'MenuFoldOutlined';
+  } else {
+    menuIconText.value = 'MenuUnfoldOutlined';
+  }
+};
+
+const checkWidth = () => {
+  let width = document.body.clientWidth;
+  if (width <= 750) {
+    brandText.value.style.display = 'none';
+    menuRef.value.$el.style.display = 'none';
+    if (width <= 460) {
+      btnRef.value.$el.style.display = 'none';
+    }
+    // inputRef.value.$el.style.display = 'none';
+
+    menuIcon.value.style.display = 'inline-block';
+  } else {
+    brandText.value.style.display = 'inline-block';
+    btnRef.value.$el.style.display = 'inline-block';
+    menuIcon.value.style.display = 'none';
+    menuRef.value.$el.style.display = 'inline-block';
+    // inputRef.value.$el.style.display = 'inline-block';
+  }
+};
+onMounted(() => {
+  checkWidth();
+});
+window.onresize = () => {
+  checkWidth();
+};
 const menuStore = useMenuStore();
 // menuStore.$subscribe((mutation, state) => {
 //   console.log('$subscribe');
@@ -64,11 +168,17 @@ const onSearch = () => {
 const handleMenuSelect = (key: string) => {
   // current.value.pop();
   // current.value.push(key);
+  if (drawerVisible.value === true) {
+    setTimeout(() => {
+      drawerVisible.value = false;
+      menuIconText.value = 'MenuUnfoldOutlined';
+    }, 500);
+  }
   router.push({ name: key });
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 .header-wrapper {
   background-color: #fff;
   box-shadow: 0 1px 4px 0 rgb(0 21 41 / 12%);
@@ -78,6 +188,7 @@ const handleMenuSelect = (key: string) => {
     justify-content: center;
   }
   .brand-part {
+    display: inline-block;
     cursor: pointer;
   }
   .menu-part {
@@ -88,5 +199,9 @@ const handleMenuSelect = (key: string) => {
     align-items: center;
     justify-content: flex-end;
   }
+}
+
+.ant-dropdown-menu-root {
+  top: 20px;
 }
 </style>

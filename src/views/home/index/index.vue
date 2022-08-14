@@ -1,6 +1,6 @@
 <template>
   <a-row class="home-content">
-    <a-col :span="17" class="content-left">
+    <a-col :xl="18" :lg="18" :md="24" :sm="24" :xs="24" class="content-left">
       <!--Tab栏部分-->
       <a-row>
         <label-list
@@ -23,9 +23,9 @@
       <card-list :card-data="cardData" />
     </a-col>
     <!--右边部分-->
-    <a-col :span="6" class="content-right">
+    <a-col :xl="6" :lg="6" :md="24" :sm="24" :xs="24" class="content-right">
       <a-row style="margin-bottom: 18px">
-        <a-card hoverable>
+        <a-card hoverable style="width: 100%">
           <a-card-meta>
             <template #title>✨ 欢迎加入我们的知识星球</template>
             <template #description>
@@ -158,14 +158,17 @@ onMounted(() => {
   background-color: #f0f2f5;
   min-height: 100vh;
   z-index: 10;
+  //padding: 24px 0 24px 24px;
+  //overflow: hidden;
   .content-left {
-    margin: 24px;
+    padding: 12px;
     .content-left-label-list {
       width: 100%;
     }
   }
   .content-right {
-    margin: 24px auto;
+    width: 100%;
+    padding: 12px;
   }
 }
 </style>

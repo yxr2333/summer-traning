@@ -3,7 +3,11 @@
     v-for="(item, index) in 24"
     :key="index"
     style="margin-bottom: 10px"
-    :span="8"
+    :xl="8"
+    :lg="8"
+    :md="24"
+    :sm="24"
+    :xs="24"
   >
     <card-item
       :tags="['编程']"
@@ -15,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import cardItem from '@/components/cardItem.vue';
+import CardItem from '@/components/cardItem.vue';
 </script>
 
 <style scoped></style>

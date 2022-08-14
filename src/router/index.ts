@@ -91,6 +91,11 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
+        name: 'setting',
+        path: '/setting',
+        component: () => import('@/views/home/setting/setting.vue'),
+      },
+      {
         name: '404',
         path: '404',
         component: () => import('@/views/sys/404.vue'),

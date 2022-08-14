@@ -1,7 +1,6 @@
 <template>
   <div class="web-brand" @click="handleToHome">
     <img alt="logo" src="src/assets/vue.svg" />
-    <span>知识星球</span>
   </div>
 </template>
 

@@ -3,7 +3,7 @@
     <a-menu
       v-model:selected-keys="nowSelect"
       class="top-menu"
-      mode="horizontal"
+      :mode="props.menuMode"
       @click="handleMenuClick"
     >
       <a-menu-item key="homeIndex" title="主页">
@@ -24,6 +24,12 @@
         </template>
         世界
       </a-menu-item>
+      <a-menu-item key="setting" title="个人">
+        <template #icon>
+          <setting-outlined />
+        </template>
+        个人
+      </a-menu-item>
     </a-menu>
   </div>
 </template>
@@ -35,8 +41,10 @@ import { useMenuStore } from '@/store';
 import {
   AppstoreOutlined,
   HomeOutlined,
+  SettingOutlined,
   TabletOutlined,
 } from '@ant-design/icons-vue';
+
 const menuStore = useMenuStore();
 menuStore.$subscribe((mutation, state) => {
   nowSelect.value.pop();
@@ -46,6 +54,11 @@ const props = defineProps({
   menuCurrent: {
     type: Array as PropType<string[]>,
     required: true,
+  },
+  menuMode: {
+    type: String,
+    required: false,
+    default: 'horizontal',
   },
 });
 const nowSelect = ref(props.menuCurrent);

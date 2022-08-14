@@ -2,13 +2,13 @@
   <a-layout>
     <!--菜单部分-->
     <a-layout-sider
+      ref="menuRef"
       class="left-sider"
       collapsible
       theme="light"
       @collapse="handleSiderCollapse"
     >
       <a-menu
-        id="dddddd"
         v-model:openKeys="openKeys"
         v-model:selectedKeys="selectedKeys"
         class="sider-menu"
@@ -125,6 +125,7 @@ import { getPageCardData } from '@/api/common';
 import { AxiosResponse } from 'axios';
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
 
+const menuRef = ref();
 const radioVal = ref('a');
 const checked = ref(false);
 const selectedKeys = ref<string[]>(['1']);
@@ -139,6 +140,15 @@ const titleClick = (e: Event) => {
   console.log('titleClick', e);
 };
 onMounted(() => {
+  const width = document.body.clientWidth;
+  let content = document.getElementById('resource-content');
+  if (width <= 450) {
+    menuRef.value.$el.style.display = 'none';
+    if (content) {
+      content!.style.marginLeft = 'auto';
+    }
+  }
+
   getPageCardData().then((resp: AxiosResponse<HomePageCardItem[]>) => {
     if (resp) {
       const { data } = resp;

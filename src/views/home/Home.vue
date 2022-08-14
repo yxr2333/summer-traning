@@ -2,7 +2,9 @@
   <div class="to-top-wrapper">
     <a-back-top :visibility-height="0" class="to-top" />
   </div>
-  <HeaderNavBar class="my-navbar" />
+  <div class="my-navbar">
+    <HeaderNavBar />
+  </div>
   <router-view v-slot="{ Component }">
     <!--    <keep-alive>-->
     <component :is="Component" />

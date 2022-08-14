@@ -2,6 +2,7 @@
   <a-layout>
     <!--左边菜单栏-->
     <a-layout-sider
+      ref="menuRef"
       class="left-sider"
       collapsible
       theme="light"
@@ -25,11 +26,13 @@
 <script setup lang="ts">
 import LeftMenu from '@/components/leftMenu.vue';
 
-import { onActivated, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { LeftMenuItem } from '@/types';
+
 const worldContent = ref();
 const router = useRouter();
+const menuRef = ref();
 /**
  * 控制菜单栏收缩时,主体内容部分的marginLeft
  * @param collapsed
@@ -45,6 +48,11 @@ const handleCollapse = (collapsed: any, type: any) => {
  * 以及每次从缓存中被重新插入的时候
  */
 onMounted(() => {
+  const width = document.body.clientWidth;
+  if (width <= 450) {
+    menuRef.value.$el.style.display = 'none';
+    worldContent.value.$el.style.marginLeft = 'auto';
+  }
   router.replace({ name: 'wish' });
 });
 
