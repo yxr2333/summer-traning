@@ -1,7 +1,9 @@
+import store, { useMenuStore, useUserInfoStore } from '@/store';
+import { message } from 'ant-design-vue';
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import store, { useMenuStore } from '@/store';
 
 const menuStore = useMenuStore(store);
+const userStore = useUserInfoStore(store);
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -72,8 +74,7 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'ranking',
             path: 'ranking',
-            component: () =>
-              import('@/views/home/world/ranking/rankingList.vue'),
+            component: () => import('@/views/home/world/ranking/rankingList.vue'),
             meta: {
               menu: 'world',
               title: '激励榜',
@@ -116,6 +117,17 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   console.log(to);
+  if (to.fullPath === '/login') {
+    next();
+  } else {
+    const { token } = userStore;
+    if (token) {
+      next();
+    } else {
+      message.error('请先登录');
+      next({ path: '/login' });
+    }
+  }
   if (to.meta.title) {
     document.title = to.meta.title + ' - 知识星球';
   }
@@ -131,6 +143,5 @@ router.beforeEach((to, from, next) => {
       console.log('nowMenu', menuStore.nowMenu);
     }
   }
-  next();
 });
 export default router;

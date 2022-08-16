@@ -21,8 +21,8 @@ module.exports = defineConfig({
   extends: [
     'plugin:vue/vue3-recommended',
     'standard',
-    'prettier',
     'plugin:prettier/recommended',
+    'prettier',
   ],
   parserOptions: {
     // js的版本
@@ -41,6 +41,6 @@ module.exports = defineConfig({
     'vue/multi-word-component-names': 'off',
     'vue/require-default-prop': 'off',
     'vue/attribute-hyphenation': 'off',
-    "prefer-const": 'off'
+    'prefer-const': 'off'
   },
 });

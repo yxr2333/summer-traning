@@ -4,6 +4,7 @@
       <!--Tab栏部分-->
       <a-row>
         <label-list
+          :tab-data="tabData"
           class="content-left-label-list"
           :select-key="selectLabel"
           @tab-change="handleTabChange"
@@ -91,22 +92,20 @@
 </template>
 
 <script lang="ts" setup>
+import { getPageCardData } from '@/api/common';
+import { getAllLabels } from '@/api/label/index';
+import CardList from '@/components/cardList.vue';
 import LabelList from '@/components/labelList.vue';
 import MyWebPageHeader from '@/components/myWebPageHeader.vue';
 import { HomePageCardItem, PageHeaderRadioItem } from '@/types';
-import { getPageCardData } from '@/api/common';
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from '@ant-design/icons-vue';
-import { onMounted, reactive, ref } from 'vue';
+import { LabelItem } from '@/types/label/label';
+import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons-vue';
 import { AxiosResponse } from 'axios';
-import CardList from '@/components/cardList.vue';
-
-const selectLabel = ref('1');
+import { onMounted, reactive, ref } from 'vue';
+const selectLabel = ref(1);
 const radioVal = ref<number | string>('a');
 const title = ref('你好');
+const tabData = ref<LabelItem[]>([]);
 const radioData = reactive<PageHeaderRadioItem[]>([
   {
     title: '推荐',
@@ -125,23 +124,31 @@ const cardData = ref<HomePageCardItem[][]>([]);
 const handleRadioChange = (val: string | number) => {
   radioVal.value = val;
 };
-const handleTabChange = (activeKey: string) => {
+const handleTabChange = (activeKey: number) => {
   selectLabel.value = activeKey;
+  tabData.value.forEach((item) => {
+    if (item.id === activeKey && item.name) {
+      title.value = item.name;
+    }
+  });
 };
 onMounted(() => {
   getPageCardData().then((resp: AxiosResponse<HomePageCardItem[]>) => {
     if (resp) {
       const { data } = resp;
       let n = 3;
-      let lineNum =
-        data.length % n === 0
-          ? data.length / n
-          : Math.floor(data.length / n + 1);
+      let lineNum = data.length % n === 0 ? data.length / n : Math.floor(data.length / n + 1);
       for (let i = 0; i < lineNum; i++) {
         let temp = data.slice(i * n, i * n + n);
 
         cardData.value.push(JSON.parse(JSON.stringify(temp)));
       }
+    }
+  });
+  getAllLabels().then((resp) => {
+    if (resp) {
+      tabData.value = resp.data;
+      title.value = tabData.value[0].name as string;
     }
   });
 });

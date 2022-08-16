@@ -28,11 +28,7 @@
           </a-form>
         </div>
         <div style="text-align: center">
-          <a-button
-            type="default"
-            style="margin-right: 10px"
-            @click="handleResetField"
-          >
+          <a-button type="default" style="margin-right: 10px" @click="handleResetField">
             重置
           </a-button>
           <a-button type="primary" @click="handleSubmit">登录</a-button>
@@ -46,15 +42,19 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue';
+import { userLogin } from '@/api/user/user';
+import { useUserInfoStore } from '@/store';
 import { UserLoginParam } from '@/types';
+import { UserInfo } from '@/types/user/user';
+import { notification } from 'ant-design-vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { message, notification } from 'ant-design-vue';
 const router = useRouter();
+const userInfoStore = useUserInfoStore();
 const formRef = ref();
 onMounted(() => {
   notification.success({
-    message: '账号：admin\n密码：admin',
+    message: '账号：yxr\n密码：123456',
   });
 });
 const loginFormRules = reactive({
@@ -74,8 +74,8 @@ const loginFormRules = reactive({
   ],
 });
 const formData = reactive<UserLoginParam>({
-  username: 'admin',
-  password: 'admin',
+  username: 'yxr',
+  password: '123456',
 });
 const iconList: any[] = ['fa fa-github', 'fa fa-wechat', 'fa fa-qq'];
 const handleResetField = () => {
@@ -83,17 +83,20 @@ const handleResetField = () => {
 };
 
 const handleSubmit = () => {
-  if (formData.username !== 'admin' || formData.password !== 'admin') {
-    message.error({
-      content: '用户名或密码错误',
+  if (formData.password && formData.username) {
+    userLogin(formData).then((resp: any) => {
+      console.log(resp);
+      if (resp.code === 200) {
+        userInfoStore.$patch({
+          token: resp.data.token,
+          userInfo: resp.data.userInfo as UserInfo,
+        });
+        localStorage.setItem('token', resp.token);
+        setTimeout(() => {
+          router.push('/home');
+        }, 1000);
+      }
     });
-  } else {
-    message.success({
-      content: '登录成功',
-    });
-    setTimeout(() => {
-      router.push('/home');
-    }, 1000);
   }
 };
 </script>

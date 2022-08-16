@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts" setup>
+import { getPageCardData } from '@/api/common';
 import HeaderNavBar from '@/components/navbar/HeaderNavBar.vue';
 import { HomePageCardItem } from '@/types';
-import { getPageCardData } from '@/api/common';
-import { onMounted, ref } from 'vue';
 import { AxiosResponse } from 'axios';
+import { onMounted, ref } from 'vue';
 
 const cardData = ref<HomePageCardItem[][]>([]);
 onMounted(() => {
@@ -26,10 +26,7 @@ onMounted(() => {
     if (resp) {
       const { data } = resp;
       let n = 3;
-      let lineNum =
-        data.length % n === 0
-          ? data.length / n
-          : Math.floor(data.length / n + 1);
+      let lineNum = data.length % n === 0 ? data.length / n : Math.floor(data.length / n + 1);
       for (let i = 0; i < lineNum; i++) {
         let temp = data.slice(i * n, i * n + n);
 

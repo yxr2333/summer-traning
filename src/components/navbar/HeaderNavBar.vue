@@ -1,11 +1,6 @@
 <template>
   <div class="header-wrapper">
-    <a-row
-      style="height: 80px"
-      type="flex"
-      justify="space-around"
-      align="middle"
-    >
+    <a-row style="height: 80px" type="flex" justify="space-around" align="middle">
       <a-col :xl="5" :lg="5" :md="5" :sm="8" :xs="8" class="brand-part">
         <web-brand class="brand-part" />
         <span ref="brandText">知识星球</span>
@@ -16,21 +11,9 @@
       </a-col>
 
       <a-col ref="menuRef" :xl="7" :lg="7" :md="7">
-        <top-menu
-          :menu-current="current"
-          class="menu-part"
-          @menu-select="handleMenuSelect"
-        />
+        <top-menu :menu-current="current" class="menu-part" @menu-select="handleMenuSelect" />
       </a-col>
-      <a-col
-        ref="inputRef"
-        :xl="8"
-        :lg="8"
-        :md="8"
-        :sm="8"
-        :xs="8"
-        class="search-part"
-      >
+      <a-col ref="inputRef" :xl="8" :lg="8" :md="8" :sm="8" :xs="8" class="search-part">
         <a-input-search
           v-model:value="searchData"
           size="large"
@@ -40,15 +23,7 @@
           @search="onSearch"
         />
       </a-col>
-      <a-col
-        ref="btnRef"
-        :xl="2"
-        :lg="2"
-        :md="2"
-        :sm="4"
-        :xs="4"
-        class="own-part"
-      >
+      <a-col ref="btnRef" :xl="2" :lg="2" :md="2" :sm="4" :xs="4" class="own-part">
         <a-row align="middle" justify="center">
           <a-button type="primary">推荐</a-button>
         </a-row>
@@ -63,19 +38,26 @@
         style="justify-content: center"
       >
         <a-dropdown placement="bottom">
-          <a-avatar :size="40" style="cursor: pointer">
-            <template #icon><UserOutlined /></template>
-          </a-avatar>
+          <a-avatar :size="40" style="cursor: pointer" alt="头像" :src="avatarUrl"></a-avatar>
           <template #overlay>
             <a-menu>
               <a-menu-item>
-                <a href="javascript:;">个人中心</a>
+                <template #icon>
+                  <user-outlined />
+                </template>
+                <a href="javascript:">个人中心</a>
               </a-menu-item>
               <a-menu-item>
-                <a href="javascript:;">消息中心</a>
+                <template #icon>
+                  <message-outlined />
+                </template>
+                <a href="javascript:">消息中心</a>
               </a-menu-item>
               <a-menu-item>
-                <a href="javascript:;" style="color: red">退出登录</a>
+                <template #icon>
+                  <logout-outlined :style="{ color: 'red' }" />
+                </template>
+                <a @click="handleLogout" style="color: red">退出登录</a>
               </a-menu-item>
             </a-menu>
           </template>
@@ -102,12 +84,19 @@
 <script lang="ts" setup>
 import TopMenu from '@/components/navbar/TopMenu.vue';
 import WebBrand from '@/components/navbar/WebBrand.vue';
-import { useMenuStore } from '@/store';
-import { UserOutlined } from '@ant-design/icons-vue';
+import { useMenuStore, useUserInfoStore } from '@/store';
+import { Icon } from '@/utils/icon';
+import { LogoutOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Icon } from '@/utils/icon';
 
+const menuStore = useMenuStore();
+const userStore = useUserInfoStore();
+const router = useRouter();
+const current = ref<string[]>([menuStore.nowMenu]); // 从pinia中读取当前选中的菜单
+
+const searchData = ref<string | null>(null);
 const brandText = ref();
 const menuIcon = ref();
 const btnRef = ref();
@@ -115,7 +104,14 @@ const menuRef = ref();
 const inputRef = ref();
 const drawerVisible = ref(false);
 const menuIconText = ref('MenuUnfoldOutlined');
+const avatarUrl = ref('');
 
+const handleLogout = (e: Event) => {
+  e.preventDefault();
+  userStore.$reset();
+  message.success('退出成功');
+  router.replace('/login');
+};
 const handleDrawerClick = () => {
   drawerVisible.value = !drawerVisible.value;
   if (drawerVisible.value === true) {
@@ -124,7 +120,9 @@ const handleDrawerClick = () => {
     menuIconText.value = 'MenuUnfoldOutlined';
   }
 };
-
+/**
+ * 根据宽度设置部分元素的可见性
+ */
 const checkWidth = () => {
   let width = document.body.clientWidth;
   if (width <= 750) {
@@ -146,11 +144,16 @@ const checkWidth = () => {
 };
 onMounted(() => {
   checkWidth();
+  console.log(userStore.userInfo);
+
+  if (userStore.userInfo !== null && userStore.userInfo.avatar) {
+    avatarUrl.value = userStore.userInfo.avatar;
+  }
 });
 window.onresize = () => {
   checkWidth();
 };
-const menuStore = useMenuStore();
+
 // menuStore.$subscribe((mutation, state) => {
 //   console.log('$subscribe');
 //   current.value.pop();
@@ -158,10 +161,7 @@ const menuStore = useMenuStore();
 //   console.log('current', current.value);
 //   // router.push({ name: current.value.at(0) });
 // });
-const router = useRouter();
-const current = ref<string[]>([menuStore.nowMenu]); // 从pina中读取当前选中的菜单
 
-const searchData = ref<string | null>(null);
 const onSearch = () => {
   console.log(searchData.value);
 };

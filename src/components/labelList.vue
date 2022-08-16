@@ -3,11 +3,8 @@
     <a-col :xl="22" :lg="22" :md="22" :sm="21" :xs="18">
       <a-row align="middle" justify="center">
         <a-tabs :activeKey="activeKey" type="card" @change="handleTabChange">
-          <a-tab-pane
-            v-for="item in 20"
-            :key="item.toString()"
-            :tab="'Tab' + item"
-          ></a-tab-pane>
+          <!-- <a-tab-pane v-for="item in 20" :key="item.toString()" :tab="'Tab' + item"></a-tab-pane> -->
+          <a-tab-pane v-for="item in props.tabData" :key="item.id" :tab="item.name"></a-tab-pane>
         </a-tabs>
       </a-row>
     </a-col>
@@ -18,15 +15,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { LabelItem } from '@/types/label/label';
+import { PropType, ref } from 'vue';
 
 const props = defineProps({
   selectKey: {
     required: true,
-    type: String,
+    type: Number,
+  },
+  tabData: {
+    required: true,
+    type: Array as PropType<LabelItem[]>,
   },
 });
-const activeKey = ref<string>(props.selectKey);
+const activeKey = ref<number>(props.selectKey);
 
 const emit = defineEmits(['tab-change']);
 const handleTabChange = (key: any) => {
