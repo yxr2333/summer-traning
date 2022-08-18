@@ -15,7 +15,7 @@
       :xs="24"
       style="margin-bottom: 10px"
     >
-      <a-card hoverable>
+      <a-card hoverable style="height: 100%">
         <template #actions>
           <setting-outlined key="setting" />
           <edit-outlined key="edit" />
@@ -23,14 +23,19 @@
         </template>
         <a-card-meta>
           <template #avatar>
-            <a-avatar :size="80" :src="data.iconUrl" />
+            <a-avatar :size="80" :src="data.icon" />
           </template>
-          <template #title>{{ data.title }}</template>
-          <template #description>{{ data.desc }}</template>
+          <template #title>{{ data.name }}</template>
+          <template #description>{{ data.description }}</template>
         </a-card-meta>
-        <div>
-          <a-tag color="success">编程</a-tag>
-          <a-tag>知识</a-tag>
+        <div style="margin-top: 30px; text-align: right">
+          <a-tag
+            v-for="(tag, index) in data.labels"
+            :key="index"
+            :color="index === 0 ? 'success' : 'default'"
+          >
+            {{ tag.name }}
+          </a-tag>
         </div>
       </a-card>
     </a-col>
@@ -38,13 +43,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType } from 'vue';
 import { HomePageCardItem } from '@/types';
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from '@ant-design/icons-vue';
+import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { onMounted, PropType } from 'vue';
 
 const props = defineProps({
   cardData: {

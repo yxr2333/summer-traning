@@ -15,7 +15,7 @@
       </a-col>
       <a-col :xl="8" :lg="8" :md="8" :sm="24" :xs="24" style="margin-top: 10px">
         <a-row justify="center" align="center">
-          <a-button type="primary" style="margin-right: 5px">提交</a-button>
+          <a-button type="primary" style="margin-right: 5px">搜索</a-button>
           <a-button type="default">重置</a-button>
         </a-row>
       </a-col>

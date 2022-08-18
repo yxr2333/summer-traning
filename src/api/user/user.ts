@@ -8,3 +8,14 @@ export function userLogin(data: UserLoginParam) {
     data,
   });
 }
+
+export function findAllUsers(pageNum: number, pageSize: number) {
+  return request({
+    url: '/user/getAllLikeName',
+    method: 'get',
+    params: {
+      pageNum,
+      pageSize,
+    },
+  });
+}

@@ -26,9 +26,9 @@
 <script setup lang="ts">
 import LeftMenu from '@/components/leftMenu.vue';
 
+import { LeftMenuItem } from '@/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { LeftMenuItem } from '@/types';
 
 const worldContent = ref();
 const router = useRouter();
@@ -48,11 +48,11 @@ const handleCollapse = (collapsed: any, type: any) => {
  * 以及每次从缓存中被重新插入的时候
  */
 onMounted(() => {
-  const width = document.body.clientWidth;
-  if (width <= 450) {
-    menuRef.value.$el.style.display = 'none';
-    worldContent.value.$el.style.marginLeft = 'auto';
-  }
+  // const width = document.body.clientWidth;
+  // if (width <= 450) {
+  //   menuRef.value.$el.style.display = 'none';
+  //   worldContent.value.$el.style.marginLeft = 'auto';
+  // }
   router.replace({ name: 'wish' });
 });
 

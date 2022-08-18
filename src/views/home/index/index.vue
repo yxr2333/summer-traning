@@ -21,7 +21,10 @@
       </a-row>
       <div style="margin-bottom: 18px"></div>
       <!--内容卡片区-->
-      <card-list :card-data="cardData" />
+      <a-spin tip="加载中..." :spinning="isLoading" size="large">
+        <card-list :card-data="cardData" v-if="cardData.length !== 0" />
+        <a-empty v-else description="暂无数据"></a-empty>
+      </a-spin>
     </a-col>
     <!--右边部分-->
     <a-col :xl="6" :lg="6" :md="24" :sm="24" :xs="24" class="content-right">
@@ -92,7 +95,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getPageCardData } from '@/api/common';
+import { getResourceByLabelId } from '@/api/common/index';
 import { getAllLabels } from '@/api/label/index';
 import CardList from '@/components/cardList.vue';
 import LabelList from '@/components/labelList.vue';
@@ -100,7 +103,6 @@ import MyWebPageHeader from '@/components/myWebPageHeader.vue';
 import { HomePageCardItem, PageHeaderRadioItem } from '@/types';
 import { LabelItem } from '@/types/label/label';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons-vue';
-import { AxiosResponse } from 'axios';
 import { onMounted, reactive, ref } from 'vue';
 const selectLabel = ref(1);
 const radioVal = ref<number | string>('a');
@@ -121,30 +123,47 @@ const radioData = reactive<PageHeaderRadioItem[]>([
   },
 ]);
 const cardData = ref<HomePageCardItem[][]>([]);
+const isLoading = ref(false);
 const handleRadioChange = (val: string | number) => {
   radioVal.value = val;
 };
+/**
+ * 顶部TAB标签切换的回调
+ * @param activeKey 当前选中的标签的id值
+ */
 const handleTabChange = (activeKey: number) => {
   selectLabel.value = activeKey;
+  // 切换下方的标题
   tabData.value.forEach((item) => {
     if (item.id === activeKey && item.name) {
       title.value = item.name;
     }
   });
+  loadCardData();
 };
-onMounted(() => {
-  getPageCardData().then((resp: AxiosResponse<HomePageCardItem[]>) => {
-    if (resp) {
-      const { data } = resp;
+
+const loadCardData = () => {
+  isLoading.value = true;
+  getResourceByLabelId(selectLabel.value).then((res) => {
+    console.log(res);
+    if (res) {
+      const { data } = res.data;
+      cardData.value.length = 0;
       let n = 3;
       let lineNum = data.length % n === 0 ? data.length / n : Math.floor(data.length / n + 1);
       for (let i = 0; i < lineNum; i++) {
-        let temp = data.slice(i * n, i * n + n);
-
+        let temp = data.slice(i * n, (i + 1) * n);
         cardData.value.push(JSON.parse(JSON.stringify(temp)));
       }
     }
   });
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 200);
+};
+
+onMounted(() => {
+  loadCardData();
   getAllLabels().then((resp) => {
     if (resp) {
       tabData.value = resp.data;

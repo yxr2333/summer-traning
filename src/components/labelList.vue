@@ -1,6 +1,6 @@
 <template>
-  <a-row type="flex" justify="space-around" align="middle">
-    <a-col :xl="22" :lg="22" :md="22" :sm="21" :xs="18">
+  <a-row type="flex" justify="space-around" align="middle" :gutter="24">
+    <a-col :xl="22" :lg="22" :md="22" :sm="21" :xs="19">
       <a-row align="middle" justify="center">
         <a-tabs :activeKey="activeKey" type="card" @change="handleTabChange">
           <!-- <a-tab-pane v-for="item in 20" :key="item.toString()" :tab="'Tab' + item"></a-tab-pane> -->
@@ -8,7 +8,7 @@
         </a-tabs>
       </a-row>
     </a-col>
-    <a-col :xl="2" :lg="2" :md="2" :sm="3" :xs="6" style="height: 40px">
+    <a-col :xl="2" :lg="2" :md="2" :sm="3" :xs="5" style="height: 40px">
       <a-button type="primary" size="middle">更多</a-button>
     </a-col>
   </a-row>

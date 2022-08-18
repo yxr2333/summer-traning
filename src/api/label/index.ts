@@ -11,3 +11,13 @@ export function getAllLabelsByCategory() {
     method: 'get',
   });
 }
+
+export function countResourceByLabelIdIn(id: number) {
+  return apiService({
+    url: '/resource/count',
+    method: 'get',
+    params: {
+      id,
+    },
+  });
+}

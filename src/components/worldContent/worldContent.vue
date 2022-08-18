@@ -12,25 +12,28 @@
     <world-content-cardlist />
   </a-row>
   <div style="display: flex; justify-content: flex-end">
-    <a-pagination
-      v-model:current="pageNum"
-      :total="500"
-      :show-size-changer="false"
-    />
+    <a-pagination v-model:current="pageNum" :total="500" :show-size-changer="false" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
-import CardItem from '@/components/cardItem.vue';
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
-import { WorldPageHeaderItem } from '@/types';
-import WorldContentForm from '@/components/worldContent/world-content-form.vue';
 import WorldContentCardlist from '@/components/worldContent/world-content-cardlist.vue';
+import WorldContentForm from '@/components/worldContent/world-content-form.vue';
+import { PageData, WorldPageHeaderItem } from '@/types';
+import { PropType, ref } from 'vue';
 const pageNum = ref(1);
 const props = defineProps({
   pageHeader: {
     type: Object as PropType<WorldPageHeaderItem>,
+    required: true,
+  },
+  cardList: {
+    type: Array,
+    require: true,
+  },
+  pageData: {
+    type: Object as PropType<PageData>,
     required: true,
   },
 });

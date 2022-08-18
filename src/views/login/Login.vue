@@ -81,7 +81,6 @@ const iconList: any[] = ['fa fa-github', 'fa fa-wechat', 'fa fa-qq'];
 const handleResetField = () => {
   formRef.value.resetFields();
 };
-
 const handleSubmit = () => {
   if (formData.password && formData.username) {
     userLogin(formData).then((resp: any) => {
@@ -91,7 +90,8 @@ const handleSubmit = () => {
           token: resp.data.token,
           userInfo: resp.data.userInfo as UserInfo,
         });
-        localStorage.setItem('token', resp.token);
+        localStorage.setItem('token', resp.data.token);
+        localStorage.setItem('userInfo', JSON.stringify(resp.data.userInfo));
         setTimeout(() => {
           router.push('/home');
         }, 1000);

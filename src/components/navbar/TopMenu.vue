@@ -35,8 +35,8 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
 import { useMenuStore } from '@/store';
+import { PropType, ref } from 'vue';
 
 import {
   AppstoreOutlined,
@@ -65,7 +65,6 @@ const nowSelect = ref(props.menuCurrent);
 
 const emit = defineEmits(['menu-select']);
 const handleMenuClick = (data: any) => {
-  console.log('success');
   emit('menu-select', data.key);
   nowSelect.value.pop();
   nowSelect.value.push(data);

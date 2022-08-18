@@ -57,7 +57,7 @@
                 <template #icon>
                   <logout-outlined :style="{ color: 'red' }" />
                 </template>
-                <a @click="handleLogout" style="color: red">退出登录</a>
+                <a style="color: red" @click="handleLogout">退出登录</a>
               </a-menu-item>
             </a-menu>
           </template>
@@ -67,9 +67,9 @@
   </div>
   <a-drawer
     v-model:visible="drawerVisible"
-    placement="left"
+    placement="right"
     width="150"
-    z-index="2000"
+    :z-index="200"
     style="padding: 40px 24px"
   >
     <top-menu
@@ -166,8 +166,8 @@ const onSearch = () => {
   console.log(searchData.value);
 };
 const handleMenuSelect = (key: string) => {
-  // current.value.pop();
-  // current.value.push(key);
+  console.log('key', key);
+
   if (drawerVisible.value === true) {
     setTimeout(() => {
       drawerVisible.value = false;

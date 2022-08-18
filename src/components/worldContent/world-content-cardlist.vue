@@ -18,8 +18,6 @@
   </a-col>
 </template>
 
-<script setup lang="ts">
-import CardItem from '@/components/cardItem.vue';
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

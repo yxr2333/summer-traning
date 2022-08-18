@@ -95,6 +95,9 @@ const routes: RouteRecordRaw[] = [
         name: 'setting',
         path: '/setting',
         component: () => import('@/views/home/setting/setting.vue'),
+        meta: {
+          title: '个人中心',
+        },
       },
       {
         name: '404',
@@ -117,31 +120,43 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   console.log(to);
+
   if (to.fullPath === '/login') {
     next();
   } else {
     const { token } = userStore;
-    if (token) {
-      next();
-    } else {
-      message.error('请先登录');
-      next({ path: '/login' });
+    if (!token) {
+      const token = localStorage.getItem('token');
+      const userInfo = localStorage.getItem('userInfo');
+      if (token !== null && token !== undefined && userInfo !== null && userInfo !== undefined) {
+        userStore.$patch({
+          token: token as any,
+          userInfo: JSON.parse(userInfo) as any,
+        });
+        if (to.path.startsWith('/home')) {
+          if (to.path.startsWith('/home/world')) {
+            menuStore.nowMenu = to.meta.menu as string;
+            next();
+            return;
+          }
+          const { name } = to;
+          if (typeof name === 'string') {
+            menuStore.nowMenu = name;
+            console.log('nowMenu', menuStore.nowMenu);
+          }
+        }
+        // next();
+      } else {
+        message.error('请先登录');
+        next({ path: '/login' });
+      }
     }
   }
+  console.log('success');
+
   if (to.meta.title) {
     document.title = to.meta.title + ' - 知识星球';
   }
-  if (to.path.startsWith('/home')) {
-    if (to.path.startsWith('/home/world')) {
-      menuStore.nowMenu = to.meta.menu as string;
-      next();
-      return;
-    }
-    const { name } = to;
-    if (typeof name === 'string') {
-      menuStore.nowMenu = name;
-      console.log('nowMenu', menuStore.nowMenu);
-    }
-  }
+  next();
 });
 export default router;

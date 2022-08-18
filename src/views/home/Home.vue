@@ -41,6 +41,6 @@ onMounted(() => {
   position: sticky;
   top: 0;
   height: 80px;
-  z-index: 9999;
+  z-index: 1000;
 }
 </style>

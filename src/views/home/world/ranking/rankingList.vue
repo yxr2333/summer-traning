@@ -6,7 +6,7 @@
     :extra-text="header.extra"
   ></common-page-header>
   <a-row :gutter="24" style="margin-top: 20px" class="ranking-list-content">
-    <a-col :span="8">
+    <a-col :xl="8" :lg="8" :md="24" :sm="24" :xs="24">
       <a-card title="总积分榜" :bordered="false" style="width: 100%">
         <template #extra>
           <a-button type="primary">
@@ -19,26 +19,18 @@
         <a-empty />
       </a-card>
     </a-col>
-    <a-col :span="8">
+    <a-col :xl="8" :lg="8" :md="24" :sm="24" :xs="24">
       <a-card title="积分周榜" :bordered="false" style="width: 100%">
         <template #extra>
-          <a-date-picker
-            v-model:value="weekValue"
-            placeholder="请选择周"
-            picker="week"
-          />
+          <a-date-picker v-model:value="weekValue" placeholder="请选择周" picker="week" />
         </template>
         <a-empty />
       </a-card>
     </a-col>
-    <a-col :span="8">
+    <a-col :xl="8" :lg="8" :md="24" :sm="24" :xs="24">
       <a-card title="积分月榜" :bordered="false" style="width: 100%">
         <template #extra>
-          <a-date-picker
-            v-model:value="monthValue"
-            placeholder="请选择月"
-            picker="month"
-          />
+          <a-date-picker v-model:value="monthValue" placeholder="请选择月" picker="month" />
         </template>
         <a-empty />
       </a-card>
@@ -48,10 +40,10 @@
 
 <script lang="ts" setup>
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
-import { ref } from 'vue';
-import { SearchOutlined } from '@ant-design/icons-vue';
 import { WorldPageHeaderItem } from '@/types';
+import { SearchOutlined } from '@ant-design/icons-vue';
 import type { Dayjs } from 'dayjs';
+import { ref } from 'vue';
 const header = ref<WorldPageHeaderItem>({
   title: '🏆︎激励榜',
   content: '一起学习，获得更多积分吧！',

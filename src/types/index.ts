@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
-
+import { LabelItem } from './label/label';
+import { UserInfo } from './user/user';
 export interface Log {
   id: number | undefined | null;
   msg: string | undefined | null;
@@ -64,9 +65,16 @@ export interface CardTagItem {
 }
 export interface HomePageCardItem {
   id: number | null;
-  iconUrl: string | null;
-  title: string | null;
-  desc: string | null;
+  collect: number | null;
+  content: string | null;
+  description: string | null;
+  icon: string | null;
+  isPaid: boolean | null;
+  link: string | null;
+  name: string | null;
+  password: string | null;
+  labels: LabelItem[] | null;
+  publishUser: UserInfo | null;
   // tags: CardTagItem[] | null;
 }
 
@@ -88,4 +96,10 @@ export interface CommentItem {
   avatar: string;
   content: string;
   datetime: Dayjs;
+}
+
+export interface PageData {
+  totalNum: number;
+  pageNum: number;
+  pageSize: number;
 }
