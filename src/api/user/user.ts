@@ -19,3 +19,23 @@ export function findAllUsers(pageNum: number, pageSize: number) {
     },
   });
 }
+
+export function findAllCollectByUserId(uid: number) {
+  return request({
+    url: '/resource/find/collect',
+    method: 'get',
+    params: {
+      uid,
+    },
+  });
+}
+
+export function findPublishList(id: number) {
+  return request({
+    url: '/resource/find/one',
+    method: 'get',
+    params: {
+      id,
+    },
+  });
+}

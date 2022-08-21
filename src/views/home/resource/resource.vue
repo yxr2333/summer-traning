@@ -138,12 +138,9 @@ const handleClick: MenuProps['onClick'] = async (e) => {
 };
 
 const handlePageNumChange = async (page: number, size: number) => {
-  console.log('page', page);
-  console.log('pageSize', pageSize);
   isLoading.value = true;
   pageNum.value = page;
   const res = await findResourcesByLabelIdIn(selectedKeys.value[0], page, pageSize.value);
-  console.log(res.data.data);
   parseCardListData(res.data.data as HomePageCardItem[]);
   totalNum.value = res.data.totalNum;
   isLoading.value = false;

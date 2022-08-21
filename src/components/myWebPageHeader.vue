@@ -1,22 +1,14 @@
 <template>
   <a-page-header
-    style="
-      border: 1px solid rgb(235, 237, 240);
-      background-color: #fff;
-      width: 100%;
-    "
+    style="border: 1px solid rgb(235, 237, 240); background-color: #fff; width: 100%"
     :title="$props.headerTitle"
   >
     <template #extra>
-      <a-radio-group
-        v-model:value="$props.radioVal"
-        button-style="solid"
-        @change="handleChange"
-      >
+      <a-radio-group v-model:value="selectVal" button-style="solid" @change="handleRadioChange">
         <a-radio-button
           v-for="(item, index) in $props.radioData"
           :key="index"
-          :value="item.value"
+          :value="Number(item.value)"
         >
           {{ item.title }}
         </a-radio-button>
@@ -27,9 +19,9 @@
 
 <script setup lang="ts">
 import { PageHeaderRadioItem } from '@/types';
-import { PropType } from 'vue';
+import { PropType, ref } from 'vue';
 
-defineProps({
+const props = defineProps({
   headerTitle: {
     required: true,
     default: '标题',
@@ -37,20 +29,19 @@ defineProps({
   },
   radioVal: {
     required: true,
-    type: String as PropType<string | number>,
+    type: Number as PropType<number>,
   },
   radioData: {
     required: true,
     type: Array as PropType<PageHeaderRadioItem[]>,
   },
-  onRadioChange: {
-    required: true,
-    type: Function as PropType<(val: string | number) => void>,
-  },
 });
-const emit = defineEmits(['radioChange']);
-const handleChange = (e: any) => {
-  emit('radioChange', e.target.value);
+const selectVal = ref(props.radioVal);
+
+const emits = defineEmits(['radio-change']);
+const handleRadioChange = (e: Event) => {
+  selectVal.value = (e.target as any).value;
+  emits('radio-change', (e.target as any).value as number);
 };
 </script>
 

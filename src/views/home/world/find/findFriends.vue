@@ -74,14 +74,14 @@
 
 <script lang="ts" setup>
 import { findAllUsers } from '@/api/user/user';
-import { WorldPageHeaderItem } from '@/types';
-import { UserBaseInfo } from '@/types/user/user';
-import { onMounted, ref } from 'vue';
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
 import WorldContentForm from '@/components/worldContent/world-content-form.vue';
+import { useUserInfoStore } from '@/store';
+import { WorldPageHeaderItem } from '@/types';
+import { UserBaseInfo } from '@/types/user/user';
 import { LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import { useUserInfoStore } from '@/store';
+import { onMounted, ref } from 'vue';
 
 const header = ref<WorldPageHeaderItem>({
   title: '🔍︎找伙伴',
@@ -104,7 +104,6 @@ const formState = ref({
 onMounted(async () => {
   isLoading.value = true;
   const result = await findAllUsers(pageNum.value, pageSize.value);
-  console.log(result.data);
   if (result) {
     totalNum.value = result.data.totalNum;
     dataArray.value = result.data.data;

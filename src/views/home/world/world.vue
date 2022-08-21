@@ -8,7 +8,7 @@
       theme="light"
       @collapse="handleCollapse"
     >
-      <left-menu :menu-items="menuItems" />
+      <left-menu :menu-items="menuItems" :prop-keys="selectedKeys" />
     </a-layout-sider>
     <a-layout ref="worldContent" class="content">
       <a-layout-content>
@@ -28,19 +28,19 @@ import LeftMenu from '@/components/leftMenu.vue';
 
 import { LeftMenuItem } from '@/types';
 import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const worldContent = ref();
 const router = useRouter();
+const route = useRoute();
 const menuRef = ref();
+const selectedKeys = ref(['wish']);
 /**
  * 控制菜单栏收缩时,主体内容部分的marginLeft
  * @param collapsed
  * @param type
  */
 const handleCollapse = (collapsed: any, type: any) => {
-  // console.log(worldContent.value);
-  console.log(collapsed);
   worldContent.value.$el.style.marginLeft = collapsed ? '80px' : '200px';
 };
 /**
@@ -53,6 +53,8 @@ onMounted(() => {
   //   menuRef.value.$el.style.display = 'none';
   //   worldContent.value.$el.style.marginLeft = 'auto';
   // }
+  console.log(route);
+
   router.replace({ name: 'wish' });
 });
 

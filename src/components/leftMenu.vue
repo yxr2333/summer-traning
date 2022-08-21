@@ -25,10 +25,14 @@ const props = defineProps({
     type: Array as PropType<LeftMenuItem[]>,
     required: true,
   },
+  propKeys: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
 });
 const router = useRouter();
 // TODO: 将菜单选中项使用Pinia管理，解决返回的时候选项不一致的问题
-const selectedKeys = ref(['wish']);
+const selectedKeys = ref(props.propKeys);
 const menuData = ref<LeftMenuItem[]>(props.menuItems);
 const handleMenuSelect = (param: any) => {
   const { key } = param;

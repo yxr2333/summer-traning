@@ -84,7 +84,6 @@ const handleResetField = () => {
 const handleSubmit = () => {
   if (formData.password && formData.username) {
     userLogin(formData).then((resp: any) => {
-      console.log(resp);
       if (resp.code === 200) {
         userInfoStore.$patch({
           token: resp.data.token,

@@ -56,7 +56,7 @@ export interface NavBarTagItem {
 }
 
 export interface PageHeaderRadioItem {
-  value: string;
+  value: number;
   title: string;
 }
 export interface CardTagItem {
@@ -69,7 +69,7 @@ export interface HomePageCardItem {
   content: string | null;
   description: string | null;
   icon: string | null;
-  isPaid: boolean | null;
+  isPaid: boolean;
   link: string | null;
   name: string | null;
   password: string | null;

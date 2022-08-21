@@ -1,4 +1,34 @@
 <template>
+  <a-modal
+    :visible="isVisible"
+    title="发布资源"
+    @ok="handleOk"
+    ok-text="确认"
+    cancel-text="取消"
+    @cancel="isVisible = false"
+  >
+    <a-form labelAlign="left">
+      <a-form-item label="名称" required>
+        <a-input placeholder="网站、文章等资源名，最多25字" />
+      </a-form-item>
+      <a-form-item label="描述" required>
+        <a-input placeholder="用一句话介绍资源，最多80字" />
+      </a-form-item>
+      <a-form-item label="链接" required>
+        <a-input placeholder="与资源对应的地址，http(s)开头" />
+      </a-form-item>
+      <a-form-item label="标签" required>
+        <a-input placeholder="最多可选5个标签，支持搜索 " />
+      </a-form-item>
+      <a-form-item label="图标" required>
+        <a-input placeholder="选择图片进行上传 " />
+        <a-button type="primary" style="margin-top: 10px">从图库选择</a-button>
+      </a-form-item>
+      <a-form-item label="详情" required>
+        <a-textarea placeholder="详细介绍该资源的作用、用法等等"></a-textarea>
+      </a-form-item>
+    </a-form>
+  </a-modal>
   <div class="header-wrapper">
     <a-row style="height: 80px" type="flex" justify="space-around" align="middle">
       <a-col :xl="5" :lg="5" :md="5" :sm="8" :xs="8" class="brand-part">
@@ -25,7 +55,7 @@
       </a-col>
       <a-col ref="btnRef" :xl="2" :lg="2" :md="2" :sm="4" :xs="4" class="own-part">
         <a-row align="middle" justify="center">
-          <a-button type="primary">推荐</a-button>
+          <a-button type="primary" @click="handlePublish">推荐</a-button>
         </a-row>
       </a-col>
       <a-col
@@ -41,13 +71,13 @@
           <a-avatar :size="40" style="cursor: pointer" alt="头像" :src="avatarUrl"></a-avatar>
           <template #overlay>
             <a-menu>
-              <a-menu-item>
+              <a-menu-item @click="router.push({ name: 'settingData' })">
                 <template #icon>
                   <user-outlined />
                 </template>
                 <a href="javascript:">个人中心</a>
               </a-menu-item>
-              <a-menu-item>
+              <a-menu-item @click="router.push({ name: 'settingNotification' })">
                 <template #icon>
                   <message-outlined />
                 </template>
@@ -105,10 +135,20 @@ const inputRef = ref();
 const drawerVisible = ref(false);
 const menuIconText = ref('MenuUnfoldOutlined');
 const avatarUrl = ref('');
+const isVisible = ref(false);
+
+const handlePublish = () => {
+  isVisible.value = true;
+};
+const handleOk = () => {
+  isVisible.value = false;
+};
 
 const handleLogout = (e: Event) => {
   e.preventDefault();
   userStore.$reset();
+  localStorage.removeItem('token');
+  localStorage.removeItem('userInfo');
   message.success('退出成功');
   router.replace('/login');
 };
@@ -162,12 +202,8 @@ window.onresize = () => {
 //   // router.push({ name: current.value.at(0) });
 // });
 
-const onSearch = () => {
-  console.log(searchData.value);
-};
+const onSearch = () => {};
 const handleMenuSelect = (key: string) => {
-  console.log('key', key);
-
   if (drawerVisible.value === true) {
     setTimeout(() => {
       drawerVisible.value = false;

@@ -16,7 +16,7 @@
           :header-title="title"
           :radio-data="radioData"
           :radio-val="radioVal"
-          :onRadioChange="handleRadioChange"
+          @radio-change="handleRadioChange"
         />
       </a-row>
       <div style="margin-bottom: 18px"></div>
@@ -105,27 +105,29 @@ import { LabelItem } from '@/types/label/label';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons-vue';
 import { onMounted, reactive, ref } from 'vue';
 const selectLabel = ref(1);
-const radioVal = ref<number | string>('a');
+const radioVal = ref<number>(0);
 const title = ref('你好');
 const tabData = ref<LabelItem[]>([]);
 const radioData = reactive<PageHeaderRadioItem[]>([
   {
     title: '推荐',
-    value: 'a',
+    value: 0,
   },
   {
     title: '最新',
-    value: 'b',
+    value: 1,
   },
   {
     title: '精选',
-    value: 'c',
+    value: 2,
   },
 ]);
 const cardData = ref<HomePageCardItem[][]>([]);
 const isLoading = ref(false);
-const handleRadioChange = (val: string | number) => {
+const handleRadioChange = (val: number) => {
   radioVal.value = val;
+
+  loadCardData();
 };
 /**
  * 顶部TAB标签切换的回调
@@ -144,8 +146,7 @@ const handleTabChange = (activeKey: number) => {
 
 const loadCardData = () => {
   isLoading.value = true;
-  getResourceByLabelId(selectLabel.value).then((res) => {
-    console.log(res);
+  getResourceByLabelId(selectLabel.value, radioVal.value).then((res) => {
     if (res) {
       const { data } = res.data;
       cardData.value.length = 0;

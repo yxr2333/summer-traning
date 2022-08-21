@@ -26,6 +26,9 @@ const routes: RouteRecordRaw[] = [
         name: 'homeNone',
         path: '',
         redirect: 'home/index',
+        meta: {
+          title: '首页',
+        },
       },
       {
         name: 'homeIndex',
@@ -52,6 +55,9 @@ const routes: RouteRecordRaw[] = [
             name: 'worldIndex',
             path: '',
             redirect: 'home/world/wish',
+            meta: {
+              title: '世界',
+            },
           },
           {
             name: 'wish',
@@ -89,7 +95,23 @@ const routes: RouteRecordRaw[] = [
               title: '讨论角',
             },
           },
+          {
+            name: 'wishDetail',
+            path: 'wd',
+            component: () => import('@/views/home/world/detail/wishDetail.vue'),
+            meta: {
+              title: '心愿详情',
+            },
+          },
         ],
+      },
+      {
+        name: 'resourceDetail',
+        path: '/resourceDetail',
+        component: () => import('@/views/resource/resourceDetail.vue'),
+        meta: {
+          title: '资源详情',
+        },
       },
       {
         name: 'setting',
@@ -98,6 +120,71 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: '个人中心',
         },
+        children: [
+          {
+            name: 'settingData',
+            path: 'info',
+            component: () => import('@/views/home/setting/subviews/info.vue'),
+            meta: {
+              title: '个人资料',
+              menu: 'setting',
+            },
+          },
+          {
+            name: 'settingCollect',
+            path: 'collect',
+            component: () => import('@/views/home/setting/subviews/collect.vue'),
+            meta: {
+              title: '我的收藏',
+              menu: 'setting',
+            },
+          },
+          {
+            name: 'settingLike',
+            path: 'record',
+            component: () => import('@/views/home/setting/subviews/record.vue'),
+            meta: {
+              title: '推荐记录',
+              menu: 'setting',
+            },
+          },
+          {
+            name: 'settingNotification',
+            path: 'notification',
+            component: () => import('@/views/home/setting/subviews/notification.vue'),
+            meta: {
+              title: '消息通知',
+              menu: 'setting',
+            },
+          },
+          {
+            name: 'settingWish',
+            path: 'myWish',
+            component: () => import('@/views/home/setting/subviews/myWish.vue'),
+            meta: {
+              title: '我的心愿',
+              menu: 'setting',
+            },
+          },
+          {
+            name: 'settingInvite',
+            path: 'invite',
+            component: () => import('@/views/home/setting/subviews/invite.vue'),
+            meta: {
+              title: '邀请好友',
+              menu: 'setting',
+            },
+          },
+          {
+            name: 'settingScore',
+            path: 'score',
+            component: () => import('@/views/home/setting/subviews/score.vue'),
+            meta: {
+              title: '积分记录',
+              menu: 'setting',
+            },
+          },
+        ],
       },
       {
         name: '404',
@@ -119,10 +206,10 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from, next) => {
-  console.log(to);
-
+  // console.log(to);
   if (to.fullPath === '/login') {
     next();
+    return;
   } else {
     const { token } = userStore;
     if (!token) {
@@ -142,19 +229,21 @@ router.beforeEach((to, from, next) => {
           const { name } = to;
           if (typeof name === 'string') {
             menuStore.nowMenu = name;
-            console.log('nowMenu', menuStore.nowMenu);
           }
         }
-        // next();
+        if (to.path.startsWith('/setting')) {
+          menuStore.nowMenu = to.meta.menu as string;
+          console.log('menuStore.nowMenu', menuStore.nowMenu);
+        }
+        next();
+        return;
       } else {
         message.error('请先登录');
         next({ path: '/login' });
       }
     }
   }
-  console.log('success');
-
-  if (to.meta.title) {
+  if (to.meta.title !== null && to.meta.title !== undefined) {
     document.title = to.meta.title + ' - 知识星球';
   }
   next();

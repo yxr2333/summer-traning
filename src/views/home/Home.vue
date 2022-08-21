@@ -21,7 +21,6 @@ import { onMounted, ref } from 'vue';
 
 const cardData = ref<HomePageCardItem[][]>([]);
 onMounted(() => {
-  console.log(1);
   getPageCardData().then((resp: AxiosResponse<HomePageCardItem[]>) => {
     if (resp) {
       const { data } = resp;
