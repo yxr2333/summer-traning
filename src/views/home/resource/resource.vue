@@ -40,6 +40,8 @@
                   <span style="margin-left: 8px">搜索</span>
                 </template>
                 <a-input-search
+                  @search="handleSearch"
+                  v-model:value="inputValue"
                   enter-button
                   style="max-width: 640px"
                   placeholder="在本专区搜索..."
@@ -50,17 +52,19 @@
                   <codepen-outlined />
                   <span style="margin-left: 8px">排序</span>
                 </template>
-                <a-radio-group v-model:value="radioVal">
-                  <a-radio-button value="time">时间</a-radio-button>
-                  <a-radio-button value="collect">收藏</a-radio-button>
+                <a-radio-group v-model:value="radioVal" @change="handleRadioChange">
+                  <a-radio-button :value="0">时间</a-radio-button>
+                  <a-radio-button :value="1">收藏</a-radio-button>
                 </a-radio-group>
               </a-form-item>
               <a-form-item>
                 <template #label>
                   <send-outlined />
-                  <span style="margin-left: 8px">精选</span>
+                  <span style="margin-left: 8px">权限</span>
                 </template>
-                <a-checkbox v-model:checked="checked">只看精选</a-checkbox>
+                <a-checkbox v-model:checked="checked" @change="handleCheckboxChange">
+                  只看免费
+                </a-checkbox>
               </a-form-item>
             </a-form>
           </a-card>
@@ -89,7 +93,7 @@
 
 <script lang="ts" setup>
 import { countResourceByLabelIdIn, getAllLabelsByCategory } from '@/api/label';
-import { findResourcesByLabelIdIn } from '@/api/resource';
+import { dynamicSearch, findResourcesByLabelIdIn } from '@/api/resource';
 import CardList from '@/components/cardList.vue';
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
 import { HomePageCardItem } from '@/types';
@@ -100,8 +104,9 @@ import { MenuProps } from 'ant-design-vue';
 import { onBeforeMount, onMounted, ref } from 'vue';
 const leftMenuData = ref<CategoryLabelItem[]>([]);
 const menuRef = ref();
-const radioVal = ref('time');
+const radioVal = ref(0);
 const checked = ref(false);
+const inputValue = ref('');
 const selectedKeys = ref<number[]>([]);
 const cardData = ref<HomePageCardItem[][]>([]);
 const openKeys = ref<number[]>([]);
@@ -113,6 +118,27 @@ const headerContent = ref('');
 const isCollapsed = ref(true);
 const isLoading = ref(false);
 const totalNum = ref(0);
+
+const handleCheckboxChange = (e: Event) => {
+  isLoading.value = true;
+  loadPageData();
+  isLoading.value = false;
+};
+
+const handleRadioChange = (e: Event) => {
+  isLoading.value = true;
+
+  loadPageData();
+  isLoading.value = false;
+};
+
+const handleSearch = () => {
+  isLoading.value = true;
+
+  loadPageData();
+  isLoading.value = false;
+};
+
 /**
  * 菜单点击切换
  * @param e 菜单点击事件的参数
@@ -121,6 +147,8 @@ const totalNum = ref(0);
 const handleClick: MenuProps['onClick'] = async (e) => {
   isLoading.value = true;
   const { key } = e;
+  console.log(key);
+
   leftMenuData.value.forEach((menuItem) => {
     // 从labels中找到id与key相同的label
     const label = menuItem.labels?.find((label) => label.id === Number(key));
@@ -134,6 +162,7 @@ const handleClick: MenuProps['onClick'] = async (e) => {
   result = await findResourcesByLabelIdIn(Number(key), pageNum.value, pageSize.value);
   parseCardListData(result.data.data as HomePageCardItem[]);
   totalNum.value = result.data.totalNum;
+  loadPageData();
   isLoading.value = false;
 };
 
@@ -150,20 +179,22 @@ const handlePageNumChange = async (page: number, size: number) => {
  * 获取左侧菜单数据
  */
 const loadLeftMenuData = () => {
-  getAllLabelsByCategory().then((res) => {
-    if (res) {
-      leftMenuData.value = res.data as CategoryLabelItem[];
-      if (leftMenuData.value[0].labels && leftMenuData.value[0].labels[0]) {
-        selectedKeys.value.length = 0;
-        selectedKeys.value.push(leftMenuData.value[0].labels[0].id as number);
-        headerTitle.value = leftMenuData.value[0].labels[0].name as string;
-        countResourceByLabelIdIn(leftMenuData.value[0].labels[0].id as number).then((resp) => {
-          if (resp) {
-            headerContent.value = `共${resp.data}个资源`;
-          }
-        });
+  return new Promise((resolve, reject) => {
+    getAllLabelsByCategory().then((res) => {
+      if (res) {
+        Object.assign(leftMenuData.value, res.data) as CategoryLabelItem[];
+        if (leftMenuData.value[0].labels && leftMenuData.value[0].labels[0]) {
+          selectedKeys.value.push(leftMenuData.value[0].labels[0].id as number);
+          headerTitle.value = leftMenuData.value[0].labels[0].name as string;
+          countResourceByLabelIdIn(leftMenuData.value[0].labels[0].id as number).then((resp) => {
+            if (resp) {
+              headerContent.value = `共${resp.data}个资源`;
+            }
+          });
+        }
+        return resolve('请求成功');
       }
-    }
+    });
   });
 };
 
@@ -183,16 +214,24 @@ const parseCardListData = (data: HomePageCardItem[]) => {
 /**
  * 获取页面内容数据
  */
-const loadPageData = async () => {
-  const result = await findResourcesByLabelIdIn(
-    selectedKeys.value[0],
-    pageNum.value,
-    pageSize.value,
-  );
-  if (result) {
-    parseCardListData(result.data.data as HomePageCardItem[]);
-  }
+const loadPageData = () => {
+  return new Promise((resolve, reject) => {
+    dynamicSearch(
+      selectedKeys.value[0],
+      inputValue.value,
+      radioVal.value,
+      checked.value,
+      pageNum.value,
+      pageSize.value,
+    ).then((res) => {
+      if (res) {
+        parseCardListData(res.data.data as HomePageCardItem[]);
+        resolve('请求成功');
+      }
+    });
+  });
 };
+
 // 挂载之前加载数据
 onBeforeMount(() => {
   const width = document.body.clientWidth;
@@ -204,13 +243,16 @@ onBeforeMount(() => {
   }
 });
 onMounted(async () => {
-  loadLeftMenuData();
+  isLoading.value = true;
+  await loadLeftMenuData();
   if (isCollapsed.value === true) {
     resourceContent.value.$el.style.marginLeft = '80px';
   } else {
     resourceContent.value.$el.style.marginLeft = '200px';
   }
-  loadPageData();
+  await loadPageData();
+  isLoading.value = false;
+  // loadPageData2();
 });
 
 /**

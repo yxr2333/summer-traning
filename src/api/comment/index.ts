@@ -7,3 +7,18 @@ export function publishComment(data: PublishCommentParams) {
     data,
   });
 }
+
+export function getAllCommentPlatformData() {
+  return apiService({
+    url: '/comment/getPlatform',
+    method: 'get',
+  });
+}
+
+export function publishCommentInPlatform(data: any) {
+  return apiService({
+    url: '/comment/addPlatform',
+    method: 'post',
+    data,
+  });
+}

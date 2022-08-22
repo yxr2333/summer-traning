@@ -7,7 +7,7 @@
       <template #title>{{ $props.title }}</template>
       <template #description>{{ $props.desc }}</template>
     </a-card-meta>
-    <div style="text-align: left; margin-top: 10px">
+    <div style="text-align: left; margin-top: 10px; margin-bottom: 20px">
       <a-tag
         v-for="(item, index) in $props.tags"
         :key="index"

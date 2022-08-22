@@ -1,24 +1,14 @@
 <template>
   <a-comment>
     <template #avatar>
-      <a-avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+      <a-avatar :src="userStore.userInfo.avatar" alt="logo" />
     </template>
     <template #content>
       <a-form-item>
-        <a-textarea
-          v-model:value="value"
-          :rows="4"
-          :showCount="true"
-          :maxlength="200"
-        />
+        <a-textarea v-model:value="inputValue" :rows="4" :showCount="true" :maxlength="200" />
       </a-form-item>
       <a-form-item>
-        <a-button
-          html-type="submit"
-          :loading="submitting"
-          type="primary"
-          @click="handleSubmit"
-        >
+        <a-button html-type="submit" :loading="submitting" type="primary" @click="handleSubmit">
           发送
         </a-button>
       </a-form-item>
@@ -27,17 +17,34 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { publishCommentInPlatform } from '@/api/comment/index';
+import { useUserInfoStore } from '@/store';
 import { message } from 'ant-design-vue';
-
-const value = ref<string>('');
+import { ref } from 'vue';
+const userStore = useUserInfoStore();
+const inputValue = ref<string>('');
 const submitting = ref<boolean>(false);
+const emits = defineEmits(['load-data']);
 const handleSubmit = () => {
   submitting.value = true;
-  setTimeout(() => {
-    message.success('评论成功');
+  if (inputValue.value === '') {
+    message.error('请输入评论内容');
     submitting.value = false;
-  }, 1500);
+    return;
+  }
+  let data = {
+    content: inputValue.value,
+    publishUser: userStore.userInfo.uid,
+  };
+  publishCommentInPlatform(data).then((res) => {
+    if (res) {
+      inputValue.value = '';
+      setTimeout(() => {
+        submitting.value = false;
+      }, 1000);
+      emits('load-data');
+    }
+  });
 };
 </script>
 

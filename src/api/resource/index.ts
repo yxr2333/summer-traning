@@ -27,6 +27,14 @@ export function findResourceById(id: number) {
   });
 }
 
+export function publishResource(data: any) {
+  return apiService({
+    url: '/resource/add',
+    method: 'post',
+    data,
+  });
+}
+
 /**
  * 根据id查询资源下的评论
  * @param id 资源id
@@ -38,6 +46,56 @@ export function findResourceCommentsById(id: number) {
     method: 'get',
     params: {
       resource_id: id,
+    },
+  });
+}
+
+export function findManyResources(
+  labelId: number,
+  order: number,
+  isFree: number,
+  pageNum: number | null,
+  pageSize: number | null,
+) {
+  if (pageNum === null || pageSize === null) {
+    pageNum = 1;
+    pageSize = 12;
+  }
+  return apiService({
+    url: '/resource/find/all',
+    method: 'get',
+    params: {
+      id: labelId,
+      order,
+      isFree: !isFree,
+      pageNum,
+      pageSize,
+    },
+  });
+}
+
+export function dynamicSearch(
+  labelId: number,
+  name: string,
+  orderId: number,
+  isFree: boolean,
+  pageNum: number | null,
+  pageSize: number | null,
+) {
+  if (pageNum == null || pageSize == null) {
+    pageNum = 1;
+    pageSize = 12;
+  }
+  return apiService({
+    url: '/resource/find/dynamic',
+    method: 'get',
+    params: {
+      labelId,
+      name,
+      orderId,
+      isFree: isFree ? 1 : 0,
+      pageNum,
+      pageSize,
     },
   });
 }

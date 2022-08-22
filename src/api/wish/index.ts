@@ -39,3 +39,30 @@ export function findWishByUid(userId: number, pageNum: number | null, pageSize: 
     },
   });
 }
+
+export function findAllWishes(
+  pageNum: number | null,
+  pageSize: number | null,
+  labels: number[],
+  content: string,
+) {
+  if (pageNum === null || pageSize === null) {
+    pageNum = 1;
+    pageSize = 10;
+  }
+  let str = '';
+  if (labels.length !== 0) {
+    str = '?labels=';
+    str += labels.join('&labels');
+  }
+
+  return apiService({
+    url: '/wish/findByContentAndLabels/' + str,
+    method: 'get',
+    params: {
+      pageNum,
+      pageSize,
+      content,
+    },
+  });
+}

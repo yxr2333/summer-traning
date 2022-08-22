@@ -16,10 +16,13 @@
 </template>
 
 <script lang="ts" setup>
+import { useMenuStore, useSettingMenuStore } from '@/store';
 import { LeftMenuItem } from '@/types';
 import { Icon } from '@/utils/icon';
 import { PropType, ref } from 'vue';
 import { useRouter } from 'vue-router';
+const settingStore = useSettingMenuStore();
+const menuStore = useMenuStore();
 const props = defineProps({
   menuItems: {
     type: Array as PropType<LeftMenuItem[]>,
@@ -31,7 +34,6 @@ const props = defineProps({
   },
 });
 const router = useRouter();
-// TODO: 将菜单选中项使用Pinia管理，解决返回的时候选项不一致的问题
 const selectedKeys = ref(props.propKeys);
 const menuData = ref<LeftMenuItem[]>(props.menuItems);
 const handleMenuSelect = (param: any) => {
@@ -40,6 +42,21 @@ const handleMenuSelect = (param: any) => {
   selectedKeys.value.pop();
   selectedKeys.value.push(key);
 };
+settingStore.$subscribe((mutation, state) => {
+  console.log('state', state.nowSettingMenu);
+
+  selectedKeys.value.pop();
+  selectedKeys.value.push(state.nowSettingMenu);
+});
+router.beforeEach((to, from, next) => {
+  if (to.path.startsWith('/setting')) {
+    console.log(to);
+    settingStore.nowSettingMenu = to.name as string;
+    menuStore.nowMenu = to.meta.menu as string;
+    console.log('menuStore.nowMenu', menuStore.nowMenu);
+  }
+  next();
+});
 </script>
 
 <style scoped lang="less">

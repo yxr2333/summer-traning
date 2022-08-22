@@ -9,19 +9,71 @@
   >
     <a-form labelAlign="left">
       <a-form-item label="名称" required>
-        <a-input placeholder="网站、文章等资源名，最多25字" />
+        <a-input
+          v-model:value="createState.name"
+          placeholder="网站、文章等资源名，最多25字"
+          aria-autocomplete="off"
+        />
       </a-form-item>
       <a-form-item label="描述" required>
-        <a-input placeholder="用一句话介绍资源，最多80字" />
+        <a-input
+          v-model:value="createState.description"
+          placeholder="用一句话介绍资源，最多80字"
+          aria-autocomplete="off"
+        />
+      </a-form-item>
+      <a-form-item label="是否付费" required>
+        <a-switch
+          v-model:checked="isPaid"
+          checked-children="免费"
+          un-checked-children="付费"
+        ></a-switch>
+      </a-form-item>
+      <a-form-item label="密码" v-if="!createState.isPaid">
+        <a-input-password
+          v-model:value="createState.password"
+          placeholder="请输入密码..."
+          aria-autocomplete="off"
+        />
       </a-form-item>
       <a-form-item label="链接" required>
-        <a-input placeholder="与资源对应的地址，http(s)开头" />
+        <a-input v-model:value="createState.link" placeholder="与资源对应的地址，http(s)开头" />
       </a-form-item>
       <a-form-item label="标签" required>
-        <a-input placeholder="最多可选5个标签，支持搜索 " />
+        <a-select
+          mode="multiple"
+          v-model:value="seletedLabels"
+          show-search
+          placeholder="选择标签"
+          style="width: 200px"
+          :options="options"
+          :filter-option="filterOption"
+        ></a-select>
       </a-form-item>
       <a-form-item label="图标" required>
-        <a-input placeholder="选择图片进行上传 " />
+        <a-upload-dragger
+          v-model:fileList="fileList"
+          name="file"
+          :multiple="true"
+          :headers="headers"
+          action="/api/v1/common/upload"
+          @change="handleChange"
+          @drop="handleDrop"
+        >
+          <img
+            :src="imgUrl"
+            alt="example"
+            style="width: 100px; height: 100px"
+            v-if="fileList.length !== 0"
+          />
+          <div v-else>
+            <p class="ant-upload-drag-icon">
+              <inbox-outlined></inbox-outlined>
+            </p>
+            <p class="ant-upload-text">点击或将文件拖到此处进行上传</p>
+            <p class="ant-upload-hint">只支持上传图片类型的文件</p>
+          </div>
+        </a-upload-dragger>
         <a-button type="primary" style="margin-top: 10px">从图库选择</a-button>
       </a-form-item>
       <a-form-item label="详情" required>
@@ -112,17 +164,30 @@
 </template>
 
 <script lang="ts" setup>
+import { getAllLabels } from '@/api/label';
+import { publishResource } from '@/api/resource';
 import TopMenu from '@/components/navbar/TopMenu.vue';
 import WebBrand from '@/components/navbar/WebBrand.vue';
 import { useMenuStore, useUserInfoStore } from '@/store';
+import { LabelItem } from '@/types/label/label';
 import { Icon } from '@/utils/icon';
-import { LogoutOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
+import {
+  InboxOutlined,
+  LogoutOutlined,
+  MessageOutlined,
+  UserOutlined,
+} from '@ant-design/icons-vue';
+import { message, SelectProps, type UploadChangeParam } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+const filterOption = (input: string, option: any) => {
+  return option.label.toLowerCase().includes(input);
+};
 const menuStore = useMenuStore();
 const userStore = useUserInfoStore();
+const headers = ref({
+  token: userStore.token,
+});
 const router = useRouter();
 const current = ref<string[]>([menuStore.nowMenu]); // 从pinia中读取当前选中的菜单
 
@@ -136,12 +201,64 @@ const drawerVisible = ref(false);
 const menuIconText = ref('MenuUnfoldOutlined');
 const avatarUrl = ref('');
 const isVisible = ref(false);
+const fileList = ref<any[]>([]);
+const imgUrl = ref('');
+const allLabels = ref<LabelItem[]>([]);
+const seletedLabels = ref<any[]>([]);
+const isPaid = ref(true);
+const options = ref<SelectProps['options']>();
+
+const createState = ref({
+  name: null as string | null,
+  description: null as string | null,
+  link: null as string | null,
+  icon: null as string | null,
+  isPaid: true as boolean,
+  password: null as string | null,
+  publishUser: null as number | null,
+  labels: [] as any[],
+});
+const handleDrop = (e: DragEvent) => {
+  console.log(e);
+};
+const handleChange = (info: UploadChangeParam) => {
+  if (info.file.status === 'done') {
+    imgUrl.value = info.file.response.data;
+  }
+};
 
 const handlePublish = () => {
   isVisible.value = true;
 };
 const handleOk = () => {
-  isVisible.value = false;
+  createState.value.isPaid = !isPaid.value;
+  createState.value.icon = fileList.value[0].response.data;
+  createState.value.publishUser = userStore.userInfo.uid;
+  createState.value.labels = seletedLabels.value.map((label) => {
+    return {
+      id: label,
+    };
+  });
+  console.log(createState.value);
+  publishResource(createState.value).then((res) => {
+    if (res) {
+      Object.assign(createState.value, {
+        name: null as string | null,
+        description: null as string | null,
+        link: null as string | null,
+        icon: null as string | null,
+        isPaid: true as boolean,
+        password: null as string | null,
+        publishUser: null as number | null,
+        labels: [] as any[],
+      });
+      seletedLabels.value = [];
+      isPaid.value = true;
+      fileList.value = [];
+      imgUrl.value = '';
+      isVisible.value = false;
+    }
+  });
 };
 
 const handleLogout = (e: Event) => {
@@ -189,6 +306,17 @@ onMounted(() => {
   if (userStore.userInfo !== null && userStore.userInfo.avatar) {
     avatarUrl.value = userStore.userInfo.avatar;
   }
+  getAllLabels().then((res) => {
+    if (res) {
+      allLabels.value = res.data;
+      options.value = res.data.map((label) => {
+        return {
+          value: label.id,
+          label: label.name,
+        };
+      });
+    }
+  });
 });
 window.onresize = () => {
   checkWidth();

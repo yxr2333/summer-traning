@@ -13,10 +13,12 @@
       <!--标题加选择器部分-->
       <a-row>
         <my-web-page-header
+          :switch-data="isFree"
           :header-title="title"
           :radio-data="radioData"
           :radio-val="radioVal"
           @radio-change="handleRadioChange"
+          @switch-change="handleSwitchChange"
         />
       </a-row>
       <div style="margin-bottom: 18px"></div>
@@ -95,8 +97,8 @@
 </template>
 
 <script lang="ts" setup>
-import { getResourceByLabelId } from '@/api/common/index';
 import { getAllLabels } from '@/api/label/index';
+import { findManyResources } from '@/api/resource';
 import CardList from '@/components/cardList.vue';
 import LabelList from '@/components/labelList.vue';
 import MyWebPageHeader from '@/components/myWebPageHeader.vue';
@@ -126,7 +128,10 @@ const cardData = ref<HomePageCardItem[][]>([]);
 const isLoading = ref(false);
 const handleRadioChange = (val: number) => {
   radioVal.value = val;
-
+  loadCardData();
+};
+const handleSwitchChange = (flag: boolean) => {
+  isFree.value = flag;
   loadCardData();
 };
 /**
@@ -143,21 +148,23 @@ const handleTabChange = (activeKey: number) => {
   });
   loadCardData();
 };
-
+const isFree = ref(true);
 const loadCardData = () => {
   isLoading.value = true;
-  getResourceByLabelId(selectLabel.value, radioVal.value).then((res) => {
-    if (res) {
-      const { data } = res.data;
-      cardData.value.length = 0;
-      let n = 3;
-      let lineNum = data.length % n === 0 ? data.length / n : Math.floor(data.length / n + 1);
-      for (let i = 0; i < lineNum; i++) {
-        let temp = data.slice(i * n, (i + 1) * n);
-        cardData.value.push(JSON.parse(JSON.stringify(temp)));
+  findManyResources(selectLabel.value, radioVal.value, Number(isFree.value), null, null).then(
+    (res) => {
+      if (res) {
+        const { data } = res.data;
+        cardData.value.length = 0;
+        let n = 3;
+        let lineNum = data.length % n === 0 ? data.length / n : Math.floor(data.length / n + 1);
+        for (let i = 0; i < lineNum; i++) {
+          let temp = data.slice(i * n, (i + 1) * n);
+          cardData.value.push(JSON.parse(JSON.stringify(temp)));
+        }
       }
-    }
-  });
+    },
+  );
   setTimeout(() => {
     isLoading.value = false;
   }, 200);

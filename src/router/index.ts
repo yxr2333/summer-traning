@@ -1,9 +1,10 @@
-import store, { useMenuStore, useUserInfoStore } from '@/store';
+import store, { useMenuStore, useSettingMenuStore, useUserInfoStore } from '@/store';
 import { message } from 'ant-design-vue';
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 const menuStore = useMenuStore(store);
 const userStore = useUserInfoStore(store);
+const settingStore = useSettingMenuStore(store);
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -117,6 +118,7 @@ const routes: RouteRecordRaw[] = [
         name: 'setting',
         path: '/setting',
         component: () => import('@/views/home/setting/setting.vue'),
+        redirect: '/setting/info',
         meta: {
           title: '个人中心',
         },
@@ -231,10 +233,7 @@ router.beforeEach((to, from, next) => {
             menuStore.nowMenu = name;
           }
         }
-        if (to.path.startsWith('/setting')) {
-          menuStore.nowMenu = to.meta.menu as string;
-          console.log('menuStore.nowMenu', menuStore.nowMenu);
-        }
+        // console.log(to.path.startsWith('/setting'));
         next();
         return;
       } else {

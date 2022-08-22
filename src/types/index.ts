@@ -92,10 +92,14 @@ export interface LeftMenuItem {
 }
 
 export interface CommentItem {
-  author: string;
-  avatar: string;
+  id: number;
   content: string;
-  datetime: Dayjs;
+  publishTime: Dayjs;
+  publishUser: {
+    uid: number;
+    username: string;
+    avatar: string | null;
+  };
 }
 
 export interface PageData {

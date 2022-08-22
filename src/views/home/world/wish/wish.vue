@@ -9,7 +9,7 @@
           mode="multiple"
           v-model:value="wishState.labelIds"
           show-search
-          placeholder="Select a person"
+          placeholder="选择标签"
           style="width: 200px"
           :options="options"
           :filter-option="filterOption"
@@ -28,44 +28,46 @@
     @btnClick="handleBtnClick"
   />
   <div class="wish-wrapper">
-    <a-card style="margin-top: 18px">
-      <world-content-form />
-    </a-card>
-    <a-row style="margin-top: 18px" :gutter="24">
-      <a-col
-        v-for="item in dataArray"
-        :key="item.id"
-        style="margin-bottom: 10px"
-        :xl="8"
-        :lg="8"
-        :md="24"
-        :sm="24"
-        :xs="24"
-      >
-        <a-badge-ribbon
-          :color="item.isFinished ? 'cyan' : 'red'"
-          :text="item.isFinished ? '已完成' : '待完成'"
+    <a-spin :spinning="isLoading">
+      <a-card style="margin-top: 18px">
+        <world-content-form @search="handleSearch" />
+      </a-card>
+      <a-row style="margin-top: 18px" :gutter="24">
+        <a-col
+          v-for="item in dataArray"
+          :key="item.id"
+          style="margin-bottom: 10px"
+          :xl="8"
+          :lg="8"
+          :md="24"
+          :sm="24"
+          :xs="24"
         >
-          <card-item
-            @click="handleClick(item.id)"
-            :avatar="(item.user.avatar as string)"
-            :tags="item.labels"
-            :title="`来自${item.user.username}的心愿`"
-            :desc="item.content"
-            :time="item.publishTime"
-          ></card-item>
-        </a-badge-ribbon>
-      </a-col>
-    </a-row>
-    <div style="display: flex; justify-content: flex-end">
-      <a-pagination v-model:current="pageNum" :total="totalNum" :show-size-changer="false" />
-    </div>
+          <a-badge-ribbon
+            :color="item.isFinished ? 'cyan' : 'red'"
+            :text="item.isFinished ? '已完成' : '待完成'"
+          >
+            <card-item
+              @click="handleClick(item.id)"
+              :avatar="(item.user.avatar as string)"
+              :tags="item.labels"
+              :title="`来自${item.user.username}的心愿`"
+              :desc="item.content"
+              :time="item.publishTime"
+            ></card-item>
+          </a-badge-ribbon>
+        </a-col>
+      </a-row>
+      <div style="display: flex; justify-content: flex-end">
+        <a-pagination v-model:current="pageNum" :total="totalNum" :show-size-changer="false" />
+      </div>
+    </a-spin>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { getAllLabels } from '@/api/label';
-import { findWishList, publishWish } from '@/api/wish';
+import { findAllWishes, findWishList, publishWish } from '@/api/wish';
 import CardItem from '@/components/cardItem.vue';
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
 import WorldContentForm from '@/components/worldContent/world-content-form.vue';
@@ -76,6 +78,7 @@ import { WishCardItem } from '@/types/wish';
 import { message, SelectProps } from 'ant-design-vue';
 import { onBeforeMount, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 const dataArray = ref<WishCardItem[]>([]);
 const pageNum = ref(1);
 const pageSize = ref(12);
@@ -95,6 +98,8 @@ const wishState = ref({
   labelIds: [] as number[],
   publishUserId: null as number | null,
 });
+
+const isLoading = ref(false);
 const userStore = useUserInfoStore();
 const loadWishData = async () => {
   let result = await findWishList(pageNum.value, pageSize.value);
@@ -108,7 +113,20 @@ const handleClick = (id: number) => {
   router.push({ name: 'wishDetail', query: { id } });
 };
 
+const handleSearch = (state: any) => {
+  isLoading.value = true;
+  findAllWishes(null, null, state.labelIds, state.content).then((resp) => {
+    if (resp) {
+      message.success('搜索成功');
+      totalNum.value = resp.data.totalNum;
+      dataArray.value = resp.data.data as WishCardItem[];
+    }
+  });
+  isLoading.value = false;
+};
+
 onBeforeMount(async () => {
+  isLoading.value = true;
   loadWishData();
   getAllLabels().then((res) => {
     if (res) {
@@ -121,6 +139,9 @@ onBeforeMount(async () => {
       });
     }
   });
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 1000);
 });
 
 const handleBtnClick = () => {

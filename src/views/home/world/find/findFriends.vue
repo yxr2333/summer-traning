@@ -27,7 +27,7 @@
   />
   <div class="wish-wrapper">
     <a-card style="margin-top: 18px">
-      <world-content-form />
+      <world-content-form @search="handleSearch" />
     </a-card>
     <a-card style="margin-top: 18px">
       <a-list item-layout="vertical">
@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts" setup>
-import { findAllUsers } from '@/api/user/user';
+import { findAllUsers, findMyAllUsers } from '@/api/user/user';
 import CommonPageHeader from '@/components/worldContent/commonPageHeader.vue';
 import WorldContentForm from '@/components/worldContent/world-content-form.vue';
 import { useUserInfoStore } from '@/store';
@@ -100,6 +100,30 @@ const formState = ref({
   description: null,
   contact: null,
 });
+
+const handleSearch = (state: any) => {
+  isLoading.value = true;
+  console.log(state);
+  if (state.labelIds.length === 0 && state.content === '') {
+    findAllUsers(pageNum.value, pageSize.value).then((res) => {
+      if (res) {
+        totalNum.value = res.data.totalNum;
+        dataArray.value = res.data.data;
+      }
+    });
+    isLoading.value = false;
+
+    return;
+  }
+  findMyAllUsers(null, null, state.labelIds, state.content).then((res) => {
+    console.log(res);
+    if (res) {
+      dataArray.value = res.data.data;
+      totalNum.value = res.data.totalNum;
+    }
+  });
+  isLoading.value = false;
+};
 
 onMounted(async () => {
   isLoading.value = true;

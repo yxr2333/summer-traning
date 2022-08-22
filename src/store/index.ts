@@ -24,6 +24,14 @@ export const useMenuStore = defineStore('useMenu', {
   },
 });
 
+export const useSettingMenuStore = defineStore('useSettingMenu', {
+  state: () => {
+    return {
+      nowSettingMenu: 'settingData',
+    };
+  },
+});
+
 export const useUserInfoStore = defineStore('useUserInfo', {
   state: () => {
     return {

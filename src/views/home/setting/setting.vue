@@ -28,14 +28,15 @@
 <script lang="ts" setup>
 import LeftMenu from '@/components/leftMenu.vue';
 
+import { useSettingMenuStore } from '@/store';
 import { LeftMenuItem } from '@/types';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+const settingMenuStore = useSettingMenuStore();
 const settingContent = ref();
 const router = useRouter();
 const settingMenuRef = ref();
-const selectedKeys = ref(['settingData']);
+const selectedKeys = ref([settingMenuStore.nowSettingMenu]);
 /**
  * 控制菜单栏收缩时,主体内容部分的marginLeft
  * @param collapsed
@@ -55,7 +56,7 @@ onMounted(() => {
     settingMenuRef.value.$el.style.display = 'none';
     settingContent.value.$el.style.marginLeft = 'auto';
   }
-  router.replace({ name: 'settingData' });
+  // router.replace({ name: 'settingData' });
 });
 
 const menuItems = ref<LeftMenuItem[]>([

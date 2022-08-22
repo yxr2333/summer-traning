@@ -4,6 +4,12 @@
     :title="$props.headerTitle"
   >
     <template #extra>
+      <a-switch
+        v-model:checked="isFree"
+        checked-children="免费"
+        un-checked-children="付费"
+        @change="handleSwitchChange"
+      />
       <a-radio-group v-model:value="selectVal" button-style="solid" @change="handleRadioChange">
         <a-radio-button
           v-for="(item, index) in $props.radioData"
@@ -35,13 +41,20 @@ const props = defineProps({
     required: true,
     type: Array as PropType<PageHeaderRadioItem[]>,
   },
+  switchData: {
+    required: true,
+    type: Boolean as PropType<boolean>,
+  },
 });
 const selectVal = ref(props.radioVal);
-
-const emits = defineEmits(['radio-change']);
+const isFree = ref(props.switchData);
+const emits = defineEmits(['radio-change', 'switch-change']);
 const handleRadioChange = (e: Event) => {
   selectVal.value = (e.target as any).value;
   emits('radio-change', (e.target as any).value as number);
+};
+const handleSwitchChange = (checked: boolean | string | number, event: Event) => {
+  emits('switch-change', checked);
 };
 </script>
 

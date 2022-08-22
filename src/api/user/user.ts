@@ -39,3 +39,29 @@ export function findPublishList(id: number) {
     },
   });
 }
+
+export function findMyAllUsers(
+  pageNum: number | null,
+  pageSize: number | null,
+  labels: number[],
+  name: string,
+) {
+  if (pageNum === null || pageSize === null) {
+    pageNum = 1;
+    pageSize = 10;
+  }
+  let str = '';
+  if (labels.length !== 0) {
+    str = '?labelIds=';
+    str += labels.join('&labelIds');
+  }
+  return request({
+    url: '/user/findAllByNameAndLabelId',
+    method: 'get',
+    params: {
+      pageNum,
+      pageSize,
+      name,
+    },
+  });
+}
