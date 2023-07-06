@@ -1,4 +1,5 @@
 import { UserLoginParam } from '@/types';
+import { UserUpdateInfo } from '@/types/user/user';
 import request from '@/utils/requestApi';
 
 export function userLogin(data: UserLoginParam) {
@@ -17,6 +18,14 @@ export function findAllUsers(pageNum: number, pageSize: number) {
       pageNum,
       pageSize,
     },
+  });
+}
+
+export function updateUserInfoApi(data: UserUpdateInfo) {
+  return request({
+    url: '/user/modifyInfo',
+    method: 'post',
+    data,
   });
 }
 
@@ -63,5 +72,26 @@ export function findMyAllUsers(
       pageSize,
       name,
     },
+  });
+}
+
+export function doRegister(username: string, password: string, email: string, description: string) {
+  return request({
+    url: '/user/register',
+    method: 'post',
+    data: {
+      username,
+      password,
+      email,
+      description,
+    },
+  });
+}
+
+export function resetPwd(data: any) {
+  return request({
+    url: '/user/resetPassword',
+    method: 'post',
+    data,
   });
 }

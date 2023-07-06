@@ -105,7 +105,7 @@ import { onBeforeMount, onMounted, ref } from 'vue';
 const leftMenuData = ref<CategoryLabelItem[]>([]);
 const menuRef = ref();
 const radioVal = ref(0);
-const checked = ref(false);
+const checked = ref(true);
 const inputValue = ref('');
 const selectedKeys = ref<number[]>([]);
 const cardData = ref<HomePageCardItem[][]>([]);

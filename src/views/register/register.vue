@@ -2,19 +2,11 @@
   <div class="login-background">
     <div class="card-main">
       <a-card class="my-card">
-        <template #title>
-          <div class="card-title">用户登录</div>
-        </template>
         <template #extra>
-          <a-button type="text" @click="router.push({ name: 'register' })">
-            暂无账号？前往注册！
-          </a-button>
-          <a-button type="danger" @click="router.push({ name: 'resetPwd' })">
-            <template #icon>
-              <warning-outlined />
-            </template>
-            忘记密码
-          </a-button>
+          <a-button type="text" @click="router.push({ name: 'login' })">返回登录</a-button>
+        </template>
+        <template #title>
+          <div class="card-title">用户注册</div>
         </template>
         <div style="text-align: center">
           <img src="src/assets/vue.svg" alt="vue" width="50" />
@@ -30,11 +22,17 @@
             :wrapper-col="{ span: 16 }"
             autocomplete="off"
           >
-            <a-form-item label="用户名" name="username">
+            <a-form-item label="用户名" name="username" required>
               <a-input v-model:value="formData.username" />
             </a-form-item>
-            <a-form-item label="密码" name="password">
+            <a-form-item label="密码" name="password" required>
               <a-input-password v-model:value="formData.password" />
+            </a-form-item>
+            <a-form-item label="邮箱" name="email" required>
+              <a-input v-model:value="formData.email" />
+            </a-form-item>
+            <a-form-item label="个人描述" name="description">
+              <a-input v-model:value="formData.description" />
             </a-form-item>
           </a-form>
         </div>
@@ -42,10 +40,7 @@
           <a-button type="default" style="margin-right: 10px" @click="handleResetField">
             重置
           </a-button>
-          <a-button type="primary" @click="handleSubmit">登录</a-button>
-        </div>
-        <div class="icon-box">
-          <i v-for="(item, index) in iconList" :key="index" :class="item"></i>
+          <a-button type="primary" @click="handleSubmit">注册</a-button>
         </div>
       </a-card>
     </div>
@@ -53,23 +48,13 @@
 </template>
 
 <script lang="ts" setup>
-import { userLogin } from '@/api/user/user';
+import { doRegister } from '@/api/user/user';
 import { useUserInfoStore } from '@/store';
-import { UserLoginParam } from '@/types';
-import { UserInfo } from '@/types/user/user';
-import { WarningOutlined } from '@ant-design/icons-vue';
-import { notification } from 'ant-design-vue';
-import { onMounted, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 const formRef = ref();
-onMounted(() => {
-  notification.success({
-    message: '账号：yxr\n密码：aaaaaa',
-  });
-});
 const loginFormRules = reactive({
   username: [
     {
@@ -85,31 +70,32 @@ const loginFormRules = reactive({
       message: '请输入密码',
     },
   ],
+  email: [
+    {
+      required: true,
+      trigger: 'blur',
+      message: '请输入邮箱',
+    },
+  ],
 });
-const formData = reactive<UserLoginParam>({
-  username: 'yxr',
-  password: 'aaaaaa',
+const formData = reactive({
+  username: '',
+  password: '',
+  email: '',
+  description: '',
 });
-const iconList: any[] = ['fa fa-github', 'fa fa-wechat', 'fa fa-qq'];
 const handleResetField = () => {
   formRef.value.resetFields();
 };
 const handleSubmit = () => {
-  if (formData.password && formData.username) {
-    userLogin(formData).then((resp: any) => {
-      if (resp.code === 200) {
-        console.log(resp);
-        userInfoStore.$patch({
-          token: resp.data.token,
-          userInfo: resp.data.user as UserInfo,
-        });
-        localStorage.setItem('token', resp.data.token);
-        localStorage.setItem('userInfo', JSON.stringify(resp.data.user));
-        setTimeout(() => {
-          router.push('/home');
-        }, 1000);
-      }
-    });
+  if (formData.password && formData.username && formData.email) {
+    doRegister(formData.username, formData.password, formData.email, formData.description).then(
+      (res: any) => {
+        if (res.code === 200) {
+          router.replace({ name: 'login' });
+        }
+      },
+    );
   }
 };
 </script>
@@ -126,7 +112,7 @@ const handleSubmit = () => {
   justify-content: center;
   .card-main {
     width: 540px;
-    height: 400px;
+    height: 500px;
     .my-card {
       width: inherit;
       height: inherit;

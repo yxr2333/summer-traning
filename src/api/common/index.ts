@@ -12,3 +12,13 @@ export function getResourceByLabelId(id: number, order: number) {
     },
   });
 }
+
+export function sendCode(email: string) {
+  return apiRequest({
+    url: '/mail/sendResetCode',
+    method: 'post',
+    params: {
+      email,
+    },
+  });
+}

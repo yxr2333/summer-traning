@@ -117,11 +117,11 @@ const radioData = reactive<PageHeaderRadioItem[]>([
   },
   {
     title: '最新',
-    value: 1,
+    value: 2,
   },
   {
     title: '精选',
-    value: 2,
+    value: 1,
   },
 ]);
 const cardData = ref<HomePageCardItem[][]>([]);

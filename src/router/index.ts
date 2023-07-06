@@ -19,6 +19,22 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    name: 'register',
+    path: '/register',
+    component: () => import('@/views/register/register.vue'),
+    meta: {
+      title: '注册',
+    },
+  },
+  {
+    name: 'resetPwd',
+    path: '/reset',
+    component: () => import('@/views/sys/resetPwd.vue'),
+    meta: {
+      title: '重置密码',
+    },
+  },
+  {
     name: 'home',
     path: '/home',
     component: () => import('@/views/home/Home.vue'),
@@ -209,7 +225,7 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   // console.log(to);
-  if (to.fullPath === '/login') {
+  if (to.fullPath === '/login' || to.fullPath === '/register' || to.fullPath === '/reset') {
     next();
     return;
   } else {

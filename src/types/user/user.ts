@@ -23,3 +23,12 @@ export interface UserBaseInfo {
   description: string | null;
   labels: LabelItem[] | null;
 }
+
+export interface UserUpdateInfo {
+  id: number | null;
+  username: string | null;
+  avatar: string | null;
+  description: string | null;
+  email: string | null;
+  labels: LabelItem[] | null;
+}
